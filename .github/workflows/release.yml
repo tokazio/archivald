@@ -1,4 +1,4 @@
-name: Publish package to GitHub Packages
+name: Publish jar on release
 on:
   release:
     types: [created]
