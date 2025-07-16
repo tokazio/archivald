@@ -12,12 +12,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
       - name: Publish package
-        run: ./gradlew jar publish
+        run: ./gradlew publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_USER: ${{ secrets.PACKAGE_USER }}
+          PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
