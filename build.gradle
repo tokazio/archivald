@@ -48,7 +48,7 @@ publishing {
       name = "GitHubPackages"
       url = 'https://maven.pkg.github.com/tokazio/filecollector'
       credentials {
-        username = System.getenv("GITHUB_ACTOR")
+        username = 'tokazio'
         password = System.getenv("GITHUB_TOKEN")
       }
     }
