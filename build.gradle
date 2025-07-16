@@ -24,9 +24,9 @@ dependencies {
     testImplementation "dev.zacsweers.kctfork:core:0.5.1"
     testImplementation "dev.zacsweers.kctfork:ksp:0.5.1"
 
-    testImplementation "io.kotest:kotest-runner-junit5-jvm:5.5.4"
-    testImplementation "io.kotest:kotest-assertions-core:5.5.4"
-    testImplementation "io.kotest:kotest-framework-datatest:5.5.4"
+    testImplementation "io.kotest:kotest-runner-junit5-jvm:5.9.1"
+    testImplementation "io.kotest:kotest-assertions-core:5.9.1"
+    testImplementation "io.kotest:kotest-framework-datatest:5.9.1"
     
     testImplementation "io.mockk:mockk:1.13.5"
     testImplementation "io.mockk:mockk-jvm:1.13.5"
