@@ -2,6 +2,11 @@
 
 Run Konsist rules via KSP annotation processor to validate architecture at compile time.
 
+There is 2 processors:
+
+1. The first is active if no 'konsistKspClasspath' is given and is responsible to generate a META-INF/architecture-rules in which we list where we could find @ArchitectureRule 
+2. The second is active if 'konsistKspClasspath' is given and is responsible to validate rules found in the META-INF/architecture-rules of the different jars in the given 'konsistKspClasspath' 
+
 ## Rule definition
 
 A rule is a function annotated with @ArchitectureRule
