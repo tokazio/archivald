@@ -7,6 +7,7 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunction
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import fr.tokazio.konsistksp.ArchitectureRule
 import org.jetbrains.kotlin.incremental.createDirectory
 import java.io.File
@@ -36,8 +37,8 @@ class ArchitectureRuleSymbolProcessor(
         }
         val file = File("${metaInf.absolutePath}/architecture-rules")
         resolver.getSymbolsWithAnnotation(ArchitectureRule::class.java.name).forEach {
-            val ksFun = it as KSFunction
-            val f = "${it.parent}::$ksFun::${ksFun.parameterTypes.joinToString()}"
+            val ksFun = it as KSFunctionDeclaration
+            val f = "${it.parent}::$ksFun::${ksFun.parameters.map { it.type }.joinToString()}"
             logger.info("@ArchitectureRule on $f")
             file.appendText("$f\n")
         }
