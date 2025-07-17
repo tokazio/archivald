@@ -6,6 +6,7 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSFunction
 import fr.tokazio.konsistksp.ArchitectureRule
 import org.jetbrains.kotlin.incremental.createDirectory
 import java.io.File
@@ -29,14 +30,16 @@ class ArchitectureRuleSymbolProcessor(
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         logger.info("Add @ArchitectureRule to META-INF/architecture-rules...")
-        val metaInf = File("${projectBase.absolutePath}${File.separatorChar}build${File.separatorChar}resources${File.separatorChar}META-INF")
+        val metaInf = File("${projectBase.absolutePath}${File.separatorChar}src${File.separatorChar}main${File.separatorChar}resources${File.separatorChar}META-INF")
         if(!metaInf.exists()){
             metaInf.createDirectory()
         }
         val file = File("${metaInf.absolutePath}/architecture-rules")
         resolver.getSymbolsWithAnnotation(ArchitectureRule::class.java.name).forEach {
-            logger.info("@ArchitectureRule on ${it}")
-            file.appendText(it.toString())
+            val ksFun = it as KSFunction
+            val f = "${it.parent}::$ksFun::${ksFun.parameterTypes.joinToString()}"
+            logger.info("@ArchitectureRule on $f")
+            file.appendText("$f\n")
         }
         return emptyList()
     }
