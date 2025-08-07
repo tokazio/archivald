@@ -55,6 +55,7 @@ dependencies{
 }
 
 ksp {
+    arg("konsistKspProjectBase", projectDir.absolutePath) //mandatory
     arg("konsistKspClasspath", configurations.testCompileClasspath.asPath)
     arg("konsistKspDebug", "true") //If needed
 }

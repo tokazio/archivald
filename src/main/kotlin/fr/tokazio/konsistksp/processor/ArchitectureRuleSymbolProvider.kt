@@ -1,6 +1,5 @@
 package fr.tokazio.konsistksp.processor
 
-import com.google.devtools.ksp.common.impl.CodeGeneratorImpl
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
@@ -13,7 +12,7 @@ class ArchitectureRuleSymbolProvider : SymbolProcessorProvider {
         return if (environment.options["konsistKspClasspath"] == null) {
             ArchitectureRuleSymbolProcessor(
                 logger = environment.logger,
-                codeGenerator = environment.codeGenerator as CodeGeneratorImpl,
+                options = environment.options,
             )
         }else {
             environment.logger.info("Konsist ksp used as a validator because a 'konsistKspClasspath' configuration was found")

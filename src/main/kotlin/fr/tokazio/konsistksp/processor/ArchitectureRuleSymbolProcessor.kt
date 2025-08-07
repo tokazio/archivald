@@ -1,32 +1,21 @@
 package fr.tokazio.konsistksp.processor
 
 import com.google.devtools.ksp.KspExperimental
-import com.google.devtools.ksp.common.impl.CodeGeneratorImpl
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSFunction
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import fr.tokazio.konsistksp.ArchitectureRule
 import org.jetbrains.kotlin.incremental.createDirectory
 import java.io.File
-import kotlin.math.log
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.jvm.isAccessible
 
 class ArchitectureRuleSymbolProcessor(
     private val logger: KSPLogger,
-    codeGenerator: CodeGeneratorImpl,
+    options: Map<String, String>,
 ) : SymbolProcessor {
 
-    private val projectBase: File = CodeGeneratorImpl::class
-        .declaredMemberProperties
-        .first {
-            it.name == "projectBase"
-        }.apply {
-            isAccessible = true
-        }.get(codeGenerator) as File
+    private val projectBase: File = File(options["konsistKspProjectBase"]!!)
 
     @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {

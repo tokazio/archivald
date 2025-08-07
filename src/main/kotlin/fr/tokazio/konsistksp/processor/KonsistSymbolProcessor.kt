@@ -1,7 +1,6 @@
 package fr.tokazio.konsistksp.processor
 
 import com.google.devtools.ksp.KspExperimental
-import com.google.devtools.ksp.common.impl.CodeGeneratorImpl
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
@@ -16,24 +15,15 @@ import fr.tokazio.konsistksp.logger.KonsistKspLogger
 import java.io.File
 import java.lang.reflect.InvocationTargetException
 import java.util.jar.JarFile
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.functions
-import kotlin.reflect.jvm.isAccessible
 
 class KonsistSymbolProcessor(
   private val logger: KonsistKspLogger,
   options: Map<String, String>,
-  codeGenerator: CodeGeneratorImpl,
 ) : SymbolProcessor {
   private lateinit var konsistScopeCreator: KonsistKspKoScopeCreator
 
-  private val projectBase: File = CodeGeneratorImpl::class
-    .declaredMemberProperties
-    .first {
-      it.name == "projectBase"
-    }.apply {
-      isAccessible = true
-    }.get(codeGenerator) as File
+  private val projectBase: File = File(options["konsistKspProjectBase"]!!)
 
   private val ruleClassFiles: Set<File>
   private val ruleSrcFiles: Set<File>
