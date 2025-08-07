@@ -1,0 +1,17 @@
+[versions]
+jvm-version = "17"
+kotlin-version = "2.2.0"
+#ksp annotation processing https://github.com/google/ksp/releases
+ksp-version = "RC3-2.0.2" #Used as {kotlin-version}-{ksp-version}
+#ksp test https://github.com/ZacSweers/kotlin-compile-testing/releases
+ksp-test-version = "0.7.1"
+#https://github.com/kotest/kotest/releases
+kotest-version="5.9.1"
+mockk-version="1.13.5"
+konsist-version="0.17.3"
+
+[libraries]
+
+[bundles]
+
+[plugins]
