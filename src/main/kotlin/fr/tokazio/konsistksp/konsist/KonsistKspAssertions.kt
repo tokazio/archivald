@@ -166,7 +166,7 @@ private fun getResult(
   val allChecksPassed = (result[positiveCheck]?.size ?: 0) == items.size
   if (!allChecksPassed) {
     val failedItems = result[!positiveCheck].orEmpty()
-    throw KspKoAssertionFailedException(
+    throw KonsistKspKoAssertionFailedException(
       testName,
       additionalMessage,
       failedItems,

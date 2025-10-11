@@ -1,41 +1,45 @@
 package fr.tokazio.konsistksp.logger
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.symbol.KSNode
+import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.api.Symbol
+import fr.tokazio.konsistksp.resolver.KonsistKspSymbol
 
 private const val PREFIX = "Konsist ksp "
 
 class KonsistKspLogger(
   private val logger: KSPLogger,
   private val isDebug: Boolean?,
-) {
-  fun debug(
+): Logger {
+  override fun debug(
     message: String,
-    symbol: KSNode? = null,
+    symbol: Symbol?,
   ) {
     if (isDebug == true) {
-      logger.info("[DEBUG] $PREFIX $message", symbol)
+      logger.info("[DEBUG] $PREFIX $message", symbol.asKSNodeOrNull())
     }
   }
 
-  fun info(
+  override fun info(
     message: String,
-    symbol: KSNode? = null,
+    symbol: Symbol?,
   ) {
-    logger.info("$PREFIX $message", symbol)
+    logger.info("$PREFIX $message", symbol.asKSNodeOrNull())
   }
 
-  fun warn(
+  override fun warn(
     message: String,
-    symbol: KSNode? = null,
+    symbol: Symbol?,
   ) {
-    logger.warn("$PREFIX $message", symbol)
+    logger.warn("$PREFIX $message", symbol.asKSNodeOrNull())
   }
 
-  fun error(
+  override fun error(
     message: String,
-    symbol: KSNode? = null,
+    symbol: Symbol?,
   ) {
-    logger.error("$PREFIX $message", symbol)
+    logger.error("$PREFIX $message", symbol.asKSNodeOrNull())
   }
 }
+
+private fun Symbol?.asKSNodeOrNull() = this?.let{(it as KonsistKspSymbol).inner}

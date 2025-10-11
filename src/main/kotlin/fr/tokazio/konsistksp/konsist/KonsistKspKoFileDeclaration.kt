@@ -1,7 +1,6 @@
 package fr.tokazio.konsistksp.konsist
 
 import com.google.devtools.ksp.symbol.FileLocation
-import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.Origin
 import com.lemonappdev.konsist.api.declaration.*
@@ -9,18 +8,20 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
-import fr.tokazio.konsistksp.logger.KonsistKspLogger
-import java.io.File
+import fr.tokazio.konsistksp.api.File
+import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.resolver.KonsistKspImport
+import fr.tokazio.konsistksp.resolver.KonsistKspFile
 import kotlin.reflect.KClass
 
 class KonsistKspKoFileDeclaration(
-  private val logger: KonsistKspLogger,
-  val ksFile: KSFile,
+  private val logger: Logger,
+  val file: File,
 ) : KoFileDeclaration {
   override val annotations: List<KoAnnotationDeclaration>
-    get() = ksFile.annotations
-      .map { ksAnnotation: KSAnnotation ->
-        KonsistKspKoAnnotationDeclaration(logger, ksAnnotation)
+    get() = file.annotations
+      .map { annotation: fr.tokazio.konsistksp.api.Annotation ->
+        KonsistKspKoAnnotationDeclaration(logger, annotation)
       }.toList()
   override val extension: String
     get() = "kt"
@@ -29,13 +30,13 @@ class KonsistKspKoFileDeclaration(
   override val importAliases: List<KoImportAliasDeclaration>
     get() = TODO("Not yet implemented")
   override val imports: List<KoImportDeclaration>
-    get() = getImportsFromSourceFile(ksFile)
+    get() = getImportsFromSourceFile(file)
   override val moduleName: String
     get() = TODO("Not yet implemented")
   override val name: String
-    get() = ksFile.fileName.substringBeforeLast('.')
+    get() = file.fileName.substringBeforeLast('.')
   override val nameWithExtension: String
-    get() = ksFile.fileName
+    get() = file.fileName
   override val numAnnotations: Int
     get() = TODO("Not yet implemented")
   override val numImportAliases: Int
@@ -47,7 +48,7 @@ class KonsistKspKoFileDeclaration(
   override val packagee: KoPackageDeclaration?
     get() = TODO("Not yet implemented")
   override val path: String
-    get() = ksFile.filePath
+    get() = file.filePath
   override val projectPath: String
     get() = TODO("Not yet implemented")
   override val sourceSetName: String
@@ -894,7 +895,7 @@ class KonsistKspKoFileDeclaration(
     TODO("Not yet implemented")
   }
 
-  override fun hashCode(): Int = ksFile.hashCode()
+  override fun hashCode(): Int = file.hashCode()
 
   override fun interfaces(includeNested: Boolean): List<KoInterfaceDeclaration> {
     TODO("Not yet implemented")
@@ -1020,7 +1021,7 @@ class KonsistKspKoFileDeclaration(
     TODO("Not yet implemented")
   }
 
-  override fun toString(): String = "${ksFile.filePath}${File.pathSeparatorChar}${ksFile.fileName}"
+  override fun toString(): String = "${file.filePath}${java.io.File.pathSeparatorChar}${file.fileName}"
 
   /*
   private fun getReferencedTypes(ksFile: KSFile): Set<KoImportDeclaration> {
@@ -1076,11 +1077,11 @@ class KonsistKspKoFileDeclaration(
 
    */
 
-  private fun getImportsFromSourceFile(ksFile: KSFile): List<KoImportDeclaration> {
+  private fun getImportsFromSourceFile(file: File): List<KoImportDeclaration> {
     val imports = mutableListOf<KoImportDeclaration>()
 
     // Split content into lines
-    val lines = File(ksFile.filePath)
+    val lines = java.io.File(file.filePath)
       .readText()
       .lines()
 
@@ -1118,13 +1119,13 @@ class KonsistKspKoFileDeclaration(
         if (importStatement.isNotEmpty()) {
           imports.add(
             KonsistKspKoImportDeclaration(
-              ksImport = KSImport(
+              konsistKspImport = KonsistKspImport(
                 location = FileLocation(
-                  filePath = ksFile.filePath,
+                  filePath = file.filePath,
                   lineNumber = lineNum + 1,
                 ),
                 origin = Origin.KOTLIN,
-                parent = ksFile,
+                parent = file.asKSFile(),
               ),
               importString = importStatement,
             ),
@@ -1173,3 +1174,5 @@ class KonsistKspKoFileDeclaration(
       ""
     }
 }
+
+private fun File.asKSFile(): KSFile = (this as KonsistKspFile).inner

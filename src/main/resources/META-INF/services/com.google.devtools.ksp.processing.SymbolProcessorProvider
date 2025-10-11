@@ -1,2 +1,2 @@
-fr.tokazio.konsistksp.processor.KonsistSymbolProvider
-fr.tokazio.konsistksp.processor.ArchitectureRuleSymbolProvider
+fr.tokazio.konsistksp.ksp.rulevalidator.KonsistValidatorSymbolProvider
+fr.tokazio.konsistksp.ksp.rulegenerator.ArchitectureRuleGeneratorSymbolProvider

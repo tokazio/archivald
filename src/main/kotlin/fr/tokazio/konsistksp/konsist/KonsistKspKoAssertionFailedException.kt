@@ -1,6 +1,6 @@
 package fr.tokazio.konsistksp.konsist
 
-class KspKoAssertionFailedException(
+class KonsistKspKoAssertionFailedException(
   val testName: String,
   val additionalMessage: String?,
   val failedItems: List<Any>,

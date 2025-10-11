@@ -4,10 +4,11 @@ import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
 import com.lemonappdev.konsist.api.declaration.KoImportAliasDeclaration
 import com.lemonappdev.konsist.api.declaration.KoImportDeclaration
 import com.lemonappdev.konsist.api.provider.KoDeclarationCastProvider
+import fr.tokazio.konsistksp.resolver.KonsistKspImport
 import kotlin.reflect.KClass
 
 class KonsistKspKoImportDeclaration(
-  val ksImport: KSImport,
+  val konsistKspImport: KonsistKspImport,
   val importString: String,
 ) : KoImportDeclaration {
   override val alias: KoImportAliasDeclaration?
@@ -17,7 +18,7 @@ class KonsistKspKoImportDeclaration(
   override val isWildcard: Boolean
     get() = importString.endsWith("*")
   override val location: String
-    get() = ksImport.location.filePath
+    get() = konsistKspImport.location.filePath
   override val locationWithText: String
     get() = TODO("Not yet implemented")
   override val moduleName: String

@@ -1,5 +1,6 @@
-package fr.tokazio.konsistksp.processor
+package fr.tokazio.konsistksp.kotlin
 
+import fr.tokazio.konsistksp.api.Logger
 import fr.tokazio.konsistksp.logger.KonsistKspLogger
 import java.io.File
 import java.io.FileInputStream
@@ -7,8 +8,8 @@ import java.nio.file.Paths
 import kotlin.io.path.absolutePathString
 
 class FileClassLoader(
-  private val logger: KonsistKspLogger,
-  parentClassLoader: ClassLoader,
+    private val logger: Logger,
+    parentClassLoader: ClassLoader,
 ) : ClassLoader(parentClassLoader) {
   private val loaded = mutableMapOf<String, Class<*>>()
 

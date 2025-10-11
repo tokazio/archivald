@@ -1,14 +1,13 @@
 package fr.tokazio.konsistksp.konsist
 
-import com.google.devtools.ksp.symbol.KSAnnotation
 import com.lemonappdev.konsist.api.declaration.KoAnnotationDeclaration
 import com.lemonappdev.konsist.api.declaration.KoArgumentDeclaration
 import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
-import fr.tokazio.konsistksp.logger.KonsistKspLogger
+import fr.tokazio.konsistksp.api.Logger
 
 class KonsistKspKoAnnotationDeclaration(
-  private val logger: KonsistKspLogger,
-  private val ksAnnotation: KSAnnotation,
+  private val logger: Logger,
+  private val annotation: fr.tokazio.konsistksp.api.Annotation,
 ) : KoAnnotationDeclaration {
   override val arguments: List<KoArgumentDeclaration>
     get() = TODO("Not yet implemented")

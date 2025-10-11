@@ -1,14 +1,14 @@
 package fr.tokazio.konsistksp.konsist
 
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.symbol.KSFile
 import com.lemonappdev.konsist.api.container.KoScope
 import com.lemonappdev.konsist.api.container.KoScopeCreator
-import fr.tokazio.konsistksp.logger.KonsistKspLogger
+import fr.tokazio.konsistksp.api.File
+import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.api.SymbolResolver
 
 class KonsistKspKoScopeCreator(
-  private val logger: KonsistKspLogger,
-  private val resolver: Resolver,
+  private val logger: Logger,
+  private val resolver: SymbolResolver,
 ) : KoScopeCreator {
   override val projectRootPath: String
     get() = TODO("Not yet implemented")
@@ -49,16 +49,16 @@ class KonsistKspKoScopeCreator(
     KonsistKspKoScope(
       logger,
       resolver.getAllFiles()
-        .filter { ksFile: KSFile ->
+        .filter { file: File ->
           if (packagee.endsWith("..")) {
-            ksFile.packageName.asString()
+            file.packageName
               .startsWith(packagee.removeSuffix("."))
           } else {
-            ksFile.packageName.asString() == packagee
+            file.packageName == packagee
           }
         }
-        .map { ksFile: KSFile ->
-          KonsistKspKoFileDeclaration(logger, ksFile)
+        .map { file: File ->
+          KonsistKspKoFileDeclaration(logger, file)
         }
         .toList()
     )

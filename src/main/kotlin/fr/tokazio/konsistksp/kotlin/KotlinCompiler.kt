@@ -1,5 +1,6 @@
 package fr.tokazio.konsistksp.kotlin
 
+import fr.tokazio.konsistksp.api.Logger
 import fr.tokazio.konsistksp.logger.KonsistKspLogger
 import org.jetbrains.kotlin.cli.common.ExitCode
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -15,8 +16,8 @@ import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.isAccessible
 
 class KotlinCompiler(
-    private val logger: KonsistKspLogger,
-    private val projectBase: File,
+    projectBase: File,
+    private val logger: Logger,
     private val options: Map<String, String>,
 ) {
     val rule_classes_path = "${projectBase.absolutePath}/build/ksp/konsist/classes"

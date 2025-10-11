@@ -1,9 +1,9 @@
-package fr.tokazio.konsistksp.processor
+package fr.tokazio.konsistksp.ksp.rulevalidator
 
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 
-class KonsistNoOpSymbolProcessor : SymbolProcessor {
+class KonsistValidatorNoOpSymbolProcessor : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> = emptyList()
 }
