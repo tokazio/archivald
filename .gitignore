@@ -84,3 +84,11 @@ hs_err_pid*.log
 
 build-cache/
 sonar.env
+/example-rules/src/main/resources/META-INF/architecture-rules
+/.idea/.name
+/.idea/compiler.xml
+/.idea/kotlinc.xml
+/.idea/ktlint-plugin.xml
+/.idea/material_theme_project_new.xml
+/.idea/misc.xml
+/.idea/vcs.xml

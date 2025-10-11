@@ -1,0 +1,38 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
+}
+
+group = 'fr.tokazio.konsistksp'
+version = 'undefined'
+
+jar {
+    enabled = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    ksp "fr.tokazio.konsistksp:processor"
+
+    implementation "fr.tokazio.konsistksp:annotations"
+
+    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
+}
+
+ksp {
+    arg("konsistKspProjectBase", projectDir.absolutePath)
+    arg("konsistKspClasspath", configurations.testCompileClasspath.asPath)
+    arg("konsistKspDebug", "true")
+}
+
+// To compile src/rules independently of the main compilation
+// compilation here is not mandatory but it allow to see compilation errors
+// before the konsist ksp dynamic compilation step
+sourceSets.main.java.srcDirs += ['src/rules']

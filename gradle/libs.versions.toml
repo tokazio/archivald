@@ -1,8 +1,11 @@
 [versions]
+me-version = "0.1.4"
 jvm-version = "17"
 kotlin-version = "2.2.0"
 #ksp annotation processing https://github.com/google/ksp/releases
 ksp-version = "2.0.2" #Used as {kotlin-version}-{ksp-version}
+#kotlin.version-ksp-version
+full-ksp-version = "2.2.0-2.0.2"
 #ksp test https://github.com/ZacSweers/kotlin-compile-testing/releases
 ksp-test-version = "0.7.1"
 #https://github.com/kotest/kotest/releases
@@ -15,3 +18,5 @@ konsist-version="0.17.3"
 [bundles]
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "full-ksp-version" }
