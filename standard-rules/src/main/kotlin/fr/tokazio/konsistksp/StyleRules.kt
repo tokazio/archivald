@@ -1,26 +1,23 @@
 package fr.tokazio.konsistksp
 
 import com.lemonappdev.konsist.api.KoModifier
-import com.lemonappdev.konsist.api.container.KoScopeCreator
 import com.lemonappdev.konsist.api.declaration.KoFunctionDeclaration
 import com.lemonappdev.konsist.api.declaration.KoPropertyDeclaration
 import com.lemonappdev.konsist.api.ext.list.indexOfFirstInstance
 import com.lemonappdev.konsist.api.ext.list.indexOfLastInstance
 import com.lemonappdev.konsist.api.ext.list.properties
 import com.lemonappdev.konsist.api.ext.provider.hasAnnotationOf
-import com.lemonappdev.konsist.api.verify.assertFalse
-import com.lemonappdev.konsist.api.verify.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import javax.inject.Inject
 
-object StyleRules {
+class StyleRules {
     /**
      * Rule is:
      * properties are declared before functions
      */
     @ArchitectureRule
     fun propertiesAreDeclaredBeforeFunctions(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -52,7 +49,7 @@ object StyleRules {
      */
     @ArchitectureRule
     fun companionObjectIsLastDeclarationInTheClass(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -81,7 +78,7 @@ object StyleRules {
      */
     @ArchitectureRule
     fun noEmptyFilesAllowed(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -96,7 +93,7 @@ object StyleRules {
      */
     @ArchitectureRule
     fun noClassShouldUseFieldInjection(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -116,7 +113,7 @@ object StyleRules {
      */
     @ArchitectureRule
     fun noClassShouldUseJavaUtilLogging(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -131,7 +128,7 @@ object StyleRules {
      */
     @ArchitectureRule
     fun packageNameMustMatchFilePath(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator

@@ -2,8 +2,9 @@ package fr.tokazio.konsistksp.logger
 
 import com.google.devtools.ksp.processing.KSPLogger
 import fr.tokazio.konsistksp.api.Logger
-import fr.tokazio.konsistksp.api.Symbol
-import fr.tokazio.konsistksp.resolver.KonsistKspSymbol
+import fr.tokazio.konsistksp.api.Node
+import fr.tokazio.konsistksp.resolver.KonsistKspFile
+import fr.tokazio.konsistksp.resolver.KonsistKspNode
 
 private const val PREFIX = "Konsist ksp "
 
@@ -13,33 +14,40 @@ class KonsistKspLogger(
 ) : Logger {
     override fun debug(
         message: String,
-        symbol: Symbol?,
+        node: Node?,
     ) {
         if (isDebug == true) {
-            logger.info("[DEBUG] $PREFIX $message", symbol.asKSNodeOrNull())
+            logger.info("[DEBUG] $PREFIX $message", node.asKSNodeOrNull())
         }
     }
 
     override fun info(
         message: String,
-        symbol: Symbol?,
+        node: Node?,
     ) {
-        logger.info("[INFO ] $PREFIX $message", symbol.asKSNodeOrNull())
+        logger.info("[INFO ] $PREFIX $message", node.asKSNodeOrNull())
     }
 
     override fun warn(
         message: String,
-        symbol: Symbol?,
+        node: Node?,
     ) {
-        logger.warn("[WARN ] $PREFIX $message", symbol.asKSNodeOrNull())
+        logger.warn("[WARN ] $PREFIX $message", node.asKSNodeOrNull())
     }
 
     override fun error(
         message: String,
-        symbol: Symbol?,
+        node: Node?,
     ) {
-        logger.error("[ERROR] $PREFIX $message", symbol.asKSNodeOrNull())
+        logger.error("[ERROR] $PREFIX $message", node.asKSNodeOrNull())
     }
 }
 
-private fun Symbol?.asKSNodeOrNull() = this?.let { (it as KonsistKspSymbol).inner }
+private fun Node?.asKSNodeOrNull() =
+    this?.let {
+        when (it) {
+            is KonsistKspNode -> it.inner
+            is KonsistKspFile -> it.inner
+            else -> throw UnsupportedOperationException("Can't log a non KSNode $it")
+        }
+    }

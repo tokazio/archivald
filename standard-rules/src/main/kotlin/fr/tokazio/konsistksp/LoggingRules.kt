@@ -1,16 +1,15 @@
 package fr.tokazio.konsistksp
 
-import com.lemonappdev.konsist.api.container.KoScopeCreator
 import com.lemonappdev.konsist.api.verify.assertTrue
 
-object LoggingRules {
+class LoggingRules {
     /**
      * Rule is:
      * do not use a logger from another class
      */
     @ArchitectureRule
     fun doNotUseALoggerFromAnotherClass(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator
@@ -34,7 +33,7 @@ object LoggingRules {
      */
     @ArchitectureRule
     fun preferWhozLoggingInsteadOfKLogging(
-        koScopeCreator: KoScopeCreator,
+        koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
         koScopeCreator

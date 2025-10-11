@@ -1,8 +1,7 @@
 package fr.tokazio.konsistksp.api
 
-interface File : Symbol {
+interface File : Declaration {
     val packageName: String
-    val filePath: String
     val fileName: String
-    val annotations: Sequence<Annotation>
+    val filePath: String
 }

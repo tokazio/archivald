@@ -8,12 +8,11 @@ group = 'fr.tokazio.konsistksp'
 version = "${libs.versions.me.version.get()}"
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    implementation "fr.tokazio.konsistksp:konsistksp-annotations"//:${libs.versions.me.version.get()}"
+    implementation "fr.tokazio.konsistksp:konsistksp-annotations"
     // Generate META-INF/architecture-rules with @ArchitectureRule
     ksp "fr.tokazio.konsistksp:konsistksp-processor"//:${libs.versions.me.version.get()}"
 
@@ -24,7 +23,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
 }
 
 ksp {

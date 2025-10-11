@@ -1,5 +1,5 @@
 package fr.tokazio.konsistksp.api
 
-interface Function {
+interface FunctionDeclaration : Declaration {
     val parameters: List<ValueParameter>
 }

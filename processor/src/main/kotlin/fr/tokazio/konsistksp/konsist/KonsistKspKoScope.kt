@@ -16,17 +16,23 @@ class KonsistKspKoScope(
         get() = TODO("Not yet implemented")
     override val imports: List<KoImportDeclaration>
         get() = TODO("Not yet implemented")
-    override val packages: List<KoPackageDeclaration>
-        get() = TODO("Not yet implemented")
+    override val packages: List<KoPackageDeclaration> =
+        files
+            .flatMap { koFileDeclaration ->
+                koFileDeclaration.classes(includeNested = false, includeLocal = false).map { koClassDeclaration ->
+                    koClassDeclaration.packagee
+                }
+            }.filterNotNull()
     override val typeAliases: List<KoTypeAliasDeclaration>
         get() = TODO("Not yet implemented")
 
     override fun classes(
         includeNested: Boolean,
         includeLocal: Boolean,
-    ): List<KoClassDeclaration> {
-        TODO("Not yet implemented")
-    }
+    ): List<KoClassDeclaration> =
+        files.flatMap { koFileDeclaration ->
+            koFileDeclaration.classes(includeNested, includeLocal)
+        }
 
     override fun classesAndInterfaces(
         includeNested: Boolean,

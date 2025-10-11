@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect"
 
-    implementation "fr.tokazio.konsistksp:konsistksp-annotations"//:${libs.versions.me.version.get()}"
+    implementation "fr.tokazio.konsistksp:konsistksp-annotations"
 
     implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 

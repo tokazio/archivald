@@ -11,21 +11,24 @@ jar {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
-dependencies {
-    //testCompileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+// To compile src/rules independently of the main compilation
+// compilation here is not mandatory but it allow to see compilation errors
+// before the konsist ksp dynamic compilation step
+sourceSets.test.java.srcDirs += ['src/rules']
 
-    testImplementation "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"
+dependencies {
+    // Validate the @ArchitectureRule
     ksp "fr.tokazio.konsistksp:konsistksp-processor:${libs.versions.me.version.get()}"
 
-//    testRuntimeOnly "org.junit.platform:junit-platform-commons:${libs.versions.junit.platform.version.get()}"
-//    testRuntimeOnly "org.junit.platform:junit-platform-engine:${libs.versions.junit.platform.version.get()}"
-    testImplementation "io.kotest:kotest-runner-junit5-jvm:${libs.versions.kotest.version.get()}"
-    testImplementation "io.kotest:kotest-assertions-core:${libs.versions.kotest.version.get()}"
+    // As a testImplementation to use the src/rules
+    testImplementation "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"
+    // Use standard-rules
+    testImplementation "fr.tokazio.konsistksp:konsistksp-standard-rules:${libs.versions.me.version.get()}"
 
+    testImplementation "io.kotest:kotest-runner-junit5-jvm:${libs.versions.kotest.version.get()}"
 }
 
 kotlin {
@@ -34,14 +37,9 @@ kotlin {
 
 ksp {
     arg("konsistKspProjectBase", projectDir.absolutePath)
-    arg("konsistKspClasspath", configurations.testCompileClasspath.asPath)
+    arg("konsistKspClasspath", configurations.testCompileClasspath.asPath) // testCompileClasspath to use src/rules
     arg("konsistKspDebug", "true")
 }
-
-// To compile src/rules independently of the main compilation
-// compilation here is not mandatory but it allow to see compilation errors
-// before the konsist ksp dynamic compilation step
-sourceSets.test.java.srcDirs += ['src/rules']
 
 test {
     useJUnitPlatform()

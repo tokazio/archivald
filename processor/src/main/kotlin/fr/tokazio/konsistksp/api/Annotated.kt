@@ -1,7 +1,5 @@
 package fr.tokazio.konsistksp.api
 
-interface Annotated {
-    val symbol: Symbol
-
-    fun asFunction() : Function
+interface Annotated : Node {
+    val annotations: Sequence<Annotation>
 }

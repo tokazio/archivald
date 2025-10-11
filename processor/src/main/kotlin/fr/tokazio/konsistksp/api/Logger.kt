@@ -3,21 +3,21 @@ package fr.tokazio.konsistksp.api
 interface Logger {
     fun debug(
         message: String,
-        symbol: Symbol? = null,
+        node: Node? = null,
     )
 
     fun info(
         message: String,
-        symbol: Symbol? = null,
+        node: Node? = null,
     )
 
     fun warn(
         message: String,
-        symbol: Symbol? = null,
+        node: Node? = null,
     )
 
     fun error(
         message: String,
-        symbol: Symbol? = null,
+        node: Node? = null,
     )
 }

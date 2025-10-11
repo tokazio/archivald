@@ -8,6 +8,7 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
+import fr.tokazio.konsistksp.api.ClassDeclaration
 import fr.tokazio.konsistksp.api.File
 import fr.tokazio.konsistksp.api.Logger
 import fr.tokazio.konsistksp.resolver.KonsistKspFile
@@ -53,18 +54,20 @@ class KonsistKspKoFileDeclaration(
     override val projectPath: String
         get() = TODO("Not yet implemented")
     override val sourceSetName: String
-        get() = TODO("Not yet implemented")
-    override val text: String
-        get() = TODO("Not yet implemented")
+        get() = if (file.filePath.contains("/main/")) "main" else ""
+    override val text: String = "text?" // TODO
     override val typeAliases: List<KoTypeAliasDeclaration>
         get() = TODO("Not yet implemented")
 
     override fun classes(
         includeNested: Boolean,
         includeLocal: Boolean,
-    ): List<KoClassDeclaration> {
-        TODO("Not yet implemented")
-    }
+    ): List<KoClassDeclaration> =
+        file.declarations
+            .filterIsInstance<ClassDeclaration>()
+            .map {
+                KonsistKspKoClassDeclaration(logger, it)
+            }.toList()
 
     override fun classesAndInterfaces(
         includeNested: Boolean,
@@ -95,9 +98,7 @@ class KonsistKspKoFileDeclaration(
         includeNested: Boolean,
         includeLocal: Boolean,
         predicate: (KoClassDeclaration) -> Boolean,
-    ): Int {
-        TODO("Not yet implemented")
-    }
+    ): Int = classes().size
 
     override fun countClassesAndInterfaces(
         includeNested: Boolean,

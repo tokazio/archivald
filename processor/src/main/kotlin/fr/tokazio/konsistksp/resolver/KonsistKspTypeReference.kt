@@ -1,20 +1,15 @@
 package fr.tokazio.konsistksp.resolver
 
-import com.google.devtools.ksp.symbol.KSValueParameter
+import com.google.devtools.ksp.symbol.KSTypeReference
 import fr.tokazio.konsistksp.api.Annotation
 import fr.tokazio.konsistksp.api.Node
 import fr.tokazio.konsistksp.api.TypeReference
-import fr.tokazio.konsistksp.api.ValueParameter
 
-class KonsistKspValueParameter(
-    internal val inner: KSValueParameter,
-) : ValueParameter {
+class KonsistKspTypeReference(
+    internal val inner: KSTypeReference,
+) : TypeReference {
     override val parent: Node?
         get() = inner.parent?.let { KonsistKspNode(it) }
-
-    override val typeReference: TypeReference by lazy {
-        KonsistKspTypeReference(inner.type)
-    }
 
     override val annotations: Sequence<Annotation> by lazy {
         inner.annotations.map {

@@ -4,6 +4,7 @@ import fr.tokazio.konsistksp.api.Logger
 import org.jetbrains.kotlin.cli.common.CLICompiler
 import org.jetbrains.kotlin.cli.common.ExitCode
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
+import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
@@ -49,7 +50,10 @@ class KotlinCompiler(
         val exec: Method =
             CLICompiler::class.java.declaredMethods
                 .first {
-                    it.name == "exec" && it.parameterCount == 3
+                    it.name == "exec" &&
+                        it.parameterCount == 3 &&
+                        it.parameterTypes[0].name == MessageCollector::class.java.name &&
+                        it.parameterTypes[1].name == Services::class.java.name
                 }.apply {
                     isAccessible = true
                 }
