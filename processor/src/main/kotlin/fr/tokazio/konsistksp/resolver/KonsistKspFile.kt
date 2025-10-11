@@ -6,7 +6,7 @@ import fr.tokazio.konsistksp.api.File
 
 class KonsistKspFile(
     internal val inner: KSFile,
-): File {
+) : File {
     override val packageName: String by lazy {
         inner.packageName.asString()
     }
@@ -23,4 +23,6 @@ class KonsistKspFile(
             KonsistKspAnnotation(it)
         }
     }
+
+    override fun toString(): String = inner.toString()
 }

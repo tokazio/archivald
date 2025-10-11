@@ -1,7 +1,14 @@
 rootProject.name = 'konsistksp'
 
-includeBuild 'annotations'
-includeBuild 'processor'
-includeBuild 'standard-rules'
-includeBuild 'example-project'
-
+includeBuild('annotations') {
+    name = "konsistksp-annotations"
+}
+includeBuild('processor') {
+    name = "konsistksp-processor"
+}
+includeBuild('standard-rules') {
+    name = "konsistksp-standard-rules"
+}
+includeBuild('example-project') {
+    name = "konsistksp-example-project"
+}

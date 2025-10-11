@@ -11,15 +11,21 @@ jar {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    ksp "fr.tokazio.konsistksp:processor"
+    //testCompileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 
-    implementation "fr.tokazio.konsistksp:annotations"
+    testImplementation "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"
+    ksp "fr.tokazio.konsistksp:konsistksp-processor:${libs.versions.me.version.get()}"
 
-    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+//    testRuntimeOnly "org.junit.platform:junit-platform-commons:${libs.versions.junit.platform.version.get()}"
+//    testRuntimeOnly "org.junit.platform:junit-platform-engine:${libs.versions.junit.platform.version.get()}"
+    testImplementation "io.kotest:kotest-runner-junit5-jvm:${libs.versions.kotest.version.get()}"
+    testImplementation "io.kotest:kotest-assertions-core:${libs.versions.kotest.version.get()}"
+
 }
 
 kotlin {
@@ -35,4 +41,8 @@ ksp {
 // To compile src/rules independently of the main compilation
 // compilation here is not mandatory but it allow to see compilation errors
 // before the konsist ksp dynamic compilation step
-sourceSets.main.java.srcDirs += ['src/rules']
+sourceSets.test.java.srcDirs += ['src/rules']
+
+test {
+    useJUnitPlatform()
+}

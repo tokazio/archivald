@@ -25,10 +25,11 @@ class SrcRuleFinder(
                 }.collect(srcInFolder)
                 .toSet()
         try {
-            //  kotlinCompiler.compile(ruleSrcFiles)
+            kotlinCompiler.compile(ruleSrcFiles)
             logger.debug("compiled $srcInFolder")
         } catch (e: Exception) {
-            logger.error("Dynamic compilation error ${e::class.jvmName}: ${e.message}")
+            logger.error("Dynamic compilation of $srcInFolder has error ${e::class.jvmName}: ${e.message}")
+            throw e
         }
     }
 }

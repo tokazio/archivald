@@ -1,3 +1,35 @@
+# Debug
+
+https://github.com/google/ksp/blob/main/DEVELOPMENT.md#debug-a-processor-andor-ksp
+
+Kill KotlinCompileDaemon
+
+```
+./gradlew --stop; pkill -f KotlinCompileDaemon
+```
+
+Run
+
+```
+./gradlew -Dorg.gradle.debug=true -Dkotlin.daemon.jvm.options="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" :konsist-example-project:kspKotlin
+```
+
+Attach a debugger to it using a run conf
+
+Re run it
+
+```
+ ./gradlew -Dorg.gradle.debug=true -Dkotlin.daemon.jvm.options="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" :konsist-example-project:kspKotlin
+```
+
+# Logging
+
+Define these 'gradle.properties' to enable logging:
+
+```
+org.gradle.logging.level=info
+```
+
 # Konsist ksp
 
 Run Konsist rules via KSP annotation processor to validate architecture at compile time.

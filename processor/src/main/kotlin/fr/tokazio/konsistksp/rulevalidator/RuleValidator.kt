@@ -2,6 +2,7 @@ package fr.tokazio.konsistksp.rulevalidator
 
 import fr.tokazio.konsistksp.ArchitectureRule
 import fr.tokazio.konsistksp.KonsistKspKoAssertionFailedException
+import fr.tokazio.konsistksp.KonsistKspScopeCreator
 import fr.tokazio.konsistksp.api.Annotated
 import fr.tokazio.konsistksp.api.Logger
 import fr.tokazio.konsistksp.api.RuleProcessor
@@ -13,7 +14,6 @@ import fr.tokazio.konsistksp.konsist.KonsistKspKoScopeCreator
 import fr.tokazio.konsistksp.kotlin.KotlinCompiler
 import java.io.File
 import java.lang.reflect.InvocationTargetException
-import kotlin.reflect.full.functions
 
 class RuleValidator(
     private val logger: Logger,
@@ -65,7 +65,7 @@ class RuleValidator(
                 logger,
                 resolver,
             )
-
+        logger.debug("Collecting compiled class from ${kotlinCompiler.rule_classes_path}")
         val compiledClassFiles =
             CollectorEngine()
                 .fileFilter {
@@ -85,7 +85,7 @@ class RuleValidator(
                         } else {
                             logger.debug("loaded rule class $clazz")
                             val functionNames =
-                                clazz.kotlin.functions
+                                clazz.methods
                                     .filter { ksFunction ->
                                         ksFunction.annotations.any { annotation ->
                                             annotation
@@ -113,7 +113,7 @@ class RuleValidator(
             logger.debug("applying ${functions.size} rule(s) from ${instance::class.qualifiedName}")
             functions.forEach { functionName ->
                 logger.info("applying rule $functionName (from ${instance::class.qualifiedName}) ...")
-                val f = instance.javaClass.getMethod(functionName, KonsistKspKoScopeCreator::class.java)
+                val f = instance.javaClass.getMethod(functionName, KonsistKspScopeCreator::class.java)
                 try {
                     f.invoke(instance, konsistScopeCreator)
                     logger.debug("successfully applied rule $functionName from ${instance::class.qualifiedName}")

@@ -25,7 +25,7 @@ tasks.register("publish") {
 tasks.register("publishToMavenLocal") {
     group = "publishing"
     dependsOn(
-            ['annotations', 'processor', 'standard-rules'].collect {
+            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
                 gradle.includedBuild(it).task(':publishToMavenLocal')
             }
     )

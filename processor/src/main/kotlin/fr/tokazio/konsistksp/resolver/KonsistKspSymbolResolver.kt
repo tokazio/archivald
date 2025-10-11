@@ -6,12 +6,14 @@ import kotlin.reflect.KClass
 
 class KonsistKspSymbolResolver(
     private val resolver: Resolver,
-): SymbolResolver {
-    override fun getSymbolsWithAnnotation(annotationKlass: KClass<*>) = resolver.getSymbolsWithAnnotation(annotationKlass.java.name).map{
-        KonsistKspAnnotated(it)
-    }
+) : SymbolResolver {
+    override fun getSymbolsWithAnnotation(annotationKlass: KClass<*>) =
+        resolver.getSymbolsWithAnnotation(annotationKlass.java.name).map {
+            KonsistKspAnnotated(it)
+        }
 
-    override fun getAllFiles() = resolver.getAllFiles().map{
-        KonsistKspFile(it)
-    }
+    override fun getAllFiles() =
+        resolver.getAllFiles().map {
+            KonsistKspFile(it)
+        }
 }

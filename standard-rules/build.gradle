@@ -8,25 +8,23 @@ group = 'fr.tokazio.konsistksp'
 version = "${libs.versions.me.version.get()}"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    compileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
-    compileOnly "fr.tokazio.konsistksp:annotations"
-    ksp "fr.tokazio.konsistksp:processor"
+    implementation "fr.tokazio.konsistksp:konsistksp-annotations"//:${libs.versions.me.version.get()}"
     // Generate META-INF/architecture-rules with @ArchitectureRule
+    ksp "fr.tokazio.konsistksp:konsistksp-processor"//:${libs.versions.me.version.get()}"
 
-    compileOnly 'javax.inject:javax.inject:1'
-    compileOnly 'org.springframework:spring-beans:5.3.31'
+    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'org.springframework:spring-beans:5.3.31'
 }
 
 kotlin {
     jvmToolchain(17)
-}
-
-test {
-    useJUnitPlatform()
 }
 
 ksp {

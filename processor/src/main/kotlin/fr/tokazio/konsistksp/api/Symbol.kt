@@ -1,4 +1,3 @@
 package fr.tokazio.konsistksp.api
 
-interface Symbol {
-}
+interface Symbol

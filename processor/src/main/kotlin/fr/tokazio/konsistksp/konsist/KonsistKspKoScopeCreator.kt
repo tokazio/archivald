@@ -69,7 +69,7 @@ class KonsistKspKoScopeCreator(
                 .filter { file: File ->
                     if (packagee.endsWith("..")) {
                         file.packageName
-                            .startsWith(packagee.removeSuffix("."))
+                            .startsWith(packagee.removeSuffix(".."))
                     } else {
                         file.packageName == packagee
                     }

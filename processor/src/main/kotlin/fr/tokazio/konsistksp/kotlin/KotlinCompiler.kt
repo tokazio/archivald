@@ -1,6 +1,7 @@
 package fr.tokazio.konsistksp.kotlin
 
 import fr.tokazio.konsistksp.api.Logger
+import org.jetbrains.kotlin.cli.common.CLICompiler
 import org.jetbrains.kotlin.cli.common.ExitCode
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
@@ -10,9 +11,7 @@ import org.jetbrains.kotlin.config.Services
 import java.io.File
 import java.io.OutputStream
 import java.io.PrintStream
-import kotlin.reflect.KFunction
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.jvm.isAccessible
+import java.lang.reflect.Method
 
 class KotlinCompiler(
     projectBase: File,
@@ -47,15 +46,13 @@ class KotlinCompiler(
         // Create an instance of the compiler
         val compiler = K2JVMCompiler()
 
-        val exec: KFunction<*> by lazy {
-            compiler::class
-                .declaredFunctions
+        val exec: Method =
+            CLICompiler::class.java.declaredMethods
                 .first {
-                    it.name == "shouldRunK2"
+                    it.name == "exec" && it.parameterCount == 3
                 }.apply {
                     isAccessible = true
                 }
-        }
 
         val myPrintStream =
             PrintStream(
@@ -83,7 +80,7 @@ class KotlinCompiler(
 
         // Compile the source files
         val exitCode =
-            exec.call(
+            exec.invoke(
                 compiler,
                 compilerMessageCollector,
                 Services.EMPTY,

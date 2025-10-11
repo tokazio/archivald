@@ -12,7 +12,10 @@ class KonsistKspAnnotated(
     override val symbol: Symbol
         get() = KonsistKspSymbol(inner.parent)
 
-    override fun asFunction(): Function = KonsistKspFunction(
-        inner as KSFunctionDeclaration
-    )
+    override fun asFunction(): Function =
+        KonsistKspFunction(
+            inner as KSFunctionDeclaration,
+        )
+
+    override fun toString(): String = inner.toString()
 }

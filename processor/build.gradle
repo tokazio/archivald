@@ -8,11 +8,15 @@ group = 'fr.tokazio.konsistksp'
 version = "${libs.versions.me.version.get()}"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    implementation "fr.tokazio.konsistksp:annotations"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    implementation "fr.tokazio.konsistksp:konsistksp-annotations"//:${libs.versions.me.version.get()}"
+
     implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:${libs.versions.kotlin.version.get()}"
