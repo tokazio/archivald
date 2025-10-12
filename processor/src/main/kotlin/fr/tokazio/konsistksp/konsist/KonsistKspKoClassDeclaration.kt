@@ -12,11 +12,11 @@ import kotlin.reflect.KClass
 
 class KonsistKspKoClassDeclaration(
     private val logger: Logger,
-    val inner: ClassDeclaration,
+    val classDeclaration: ClassDeclaration,
 ) : KoClassDeclaration {
-    override fun toString(): String = inner.toString()
+    override fun toString(): String = classDeclaration.toString()
 
-    override val fullyQualifiedName: String = inner.qualifiedName
+    override val fullyQualifiedName: String = classDeclaration.qualifiedName
 
     override fun hasNameContaining(text: String): Boolean = fullyQualifiedName.contains(text)
 
@@ -28,9 +28,9 @@ class KonsistKspKoClassDeclaration(
 
     override fun hasNameStartingWith(prefix: String): Boolean = fullyQualifiedName.startsWith(prefix)
 
-    override val name: String = inner.qualifiedName
+    override val name: String = classDeclaration.qualifiedName
 
-    override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, inner)
+    override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, classDeclaration)
 
     override fun resideInPackage(name: String): Boolean {
         TODO("Not yet implemented")
@@ -112,7 +112,7 @@ class KonsistKspKoClassDeclaration(
         }
 
     override val annotations: List<KoAnnotationDeclaration> by lazy {
-        inner.annotations
+        classDeclaration.annotations
             .map {
                 KonsistKspKoAnnotationDeclaration(logger, it)
             }.toList()
@@ -500,10 +500,10 @@ class KonsistKspKoClassDeclaration(
     }
 
     override val containingDeclaration: KoBaseDeclaration
-        get() = KonsistKspKoDeclaration(logger, inner.containingFile)
+        get() = KonsistKspKoDeclaration(logger, classDeclaration.containingFile)
 
     override val containingFile: KoFileDeclaration
-        get() = KonsistKspKoFileDeclaration(logger, inner.containingFile)
+        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
 
     override fun countDeclarations(
         includeNested: Boolean,
@@ -517,7 +517,7 @@ class KonsistKspKoClassDeclaration(
         includeNested: Boolean,
         includeLocal: Boolean,
     ): List<KoBaseDeclaration> =
-        inner.declarations
+        classDeclaration.declarations
             .map {
                 KonsistKspKoDeclaration(logger, it)
             }.toList()
@@ -828,7 +828,7 @@ class KonsistKspKoClassDeclaration(
     override val kDoc: KoKDocDeclaration
         get() = TODO("Not yet implemented")
 
-    override val location: String = inner.containingFile.filePath
+    override val location: String = classDeclaration.containingFile.filePath
 
     override val locationWithText: String
         get() = TODO("Not yet implemented")
@@ -931,7 +931,7 @@ class KonsistKspKoClassDeclaration(
     }
 
     override fun objects(includeNested: Boolean): List<KoObjectDeclaration> =
-        inner.declarations
+        classDeclaration.declarations
             .filterIsInstance<ClassDeclaration>()
             .filter {
                 it.isObject || it.isCompanionObject
@@ -1207,7 +1207,7 @@ class KonsistKspKoClassDeclaration(
     }
 
     override val sourceSetName: String
-        get() = inner.sourceSetName
+        get() = classDeclaration.sourceSetName
 
     override val isTopLevel: Boolean
         get() = TODO("Not yet implemented")

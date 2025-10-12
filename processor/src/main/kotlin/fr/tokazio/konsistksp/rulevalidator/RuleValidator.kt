@@ -10,10 +10,7 @@ import fr.tokazio.konsistksp.internal.kotlin.KotlinCompiler
 import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.Annotated
 import fr.tokazio.konsistksp.internal.model.Node
-import fr.tokazio.konsistksp.konsist.KonsistKspKoClassDeclaration
-import fr.tokazio.konsistksp.konsist.KonsistKspKoFileDeclaration
-import fr.tokazio.konsistksp.konsist.KonsistKspKoImportDeclaration
-import fr.tokazio.konsistksp.konsist.KonsistKspKoScopeCreator
+import fr.tokazio.konsistksp.konsist.*
 import fr.tokazio.konsistksp.ksp.KONSIST_KSP_CLASSPATH_OPTION
 import fr.tokazio.konsistksp.ksp.KONSIST_KSP_PROJECT_BASE_OPTION
 import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspNode
@@ -151,7 +148,9 @@ class RuleValidator(
                                 ex.targetException,
                             )
                         } else {
-                            logger.error("⛔ Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
+                            logger.error(
+                                "⛔ Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}, run your build command with --stacktrace to get more information",
+                            )
                             throw ex
                         }
                     }
@@ -167,8 +166,8 @@ class RuleValidator(
             when (it) {
                 is KonsistKspKoClassDeclaration ->
                     fail(
-                        "${ex.testName} failed at file://${it.location}:1",
-                        it.inner.containingFile,
+                        "${ex.testName} failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
+                        it.classDeclaration.containingFile,
                         ex,
                     )
 
@@ -178,8 +177,20 @@ class RuleValidator(
                         "${ex.testName} but found 'import ${it.importString}' at file://${it.location}:${it.konsistKspImport.location.lineNumber}"
                     fail(message, KonsistKspNode(it.konsistKspImport), ex)
                 }
+                is KonsistKspKoObjectDeclaration -> {
+                    fail(
+                        "${ex.testName} failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
+                        it.classDeclaration,
+                        ex,
+                    )
+                }
 
-                else -> fail("Validation error unknown: ${it::class.java}", null, ex)
+                else ->
+                    fail(
+                        "Validation error unknown: ${it::class.java}, you should handle it in ${this::class.java.simpleName}.handleAssertionException",
+                        null,
+                        ex,
+                    )
             }
         }
     }

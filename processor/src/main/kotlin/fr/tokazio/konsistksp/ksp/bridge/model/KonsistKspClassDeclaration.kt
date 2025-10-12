@@ -1,11 +1,9 @@
 package fr.tokazio.konsistksp.ksp.bridge.model
 
-import com.google.devtools.ksp.symbol.ClassKind
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.*
 import fr.tokazio.konsistksp.internal.model.*
 import fr.tokazio.konsistksp.internal.model.Annotation
+import fr.tokazio.konsistksp.internal.model.Modifier
 
 class KonsistKspClassDeclaration(
     internal val inner: KSClassDeclaration,
@@ -13,19 +11,8 @@ class KonsistKspClassDeclaration(
 ) : ClassDeclaration {
     override val parent: Node?
         get() = inner.parent?.let { KonsistKspNode(it) }
-    /*
-    override val containingDeclaration: Any
-        get() = KonsistKspFile(file!!)
 
-    override val containingFile: File
-        get() = KonsistKspFile(file!!)
-
-         override val sourceSetName: String
-        get() =
-            file?.let {
-                if (it.filePath.contains("/main/")) "main" else "?"
-            } ?: "?"
-     */
+    override val location = inner.location as FileLocation
 
     override val qualifiedName: String = inner.qualifiedName!!.asString()
 

@@ -55,20 +55,16 @@ class StyleRules {
         koScopeCreator
             .scopeFromPackage("$packageName..")
             .classes()
-            .assertTrue {
-                val companionObject =
-                    it
-                        .objects(includeNested = false)
-                        .lastOrNull { obj ->
-                            obj.hasModifier(KoModifier.COMPANION)
-                        }
-                if (companionObject != null) {
-                    it
-                        .declarations(includeNested = false, includeLocal = false)
-                        .last() == companionObject
-                } else {
-                    true
-                }
+            .forEach { classDeclaration ->
+                classDeclaration
+                    .objects(includeNested = false)
+                    .lastOrNull { obj ->
+                        obj.hasModifier(KoModifier.COMPANION)
+                    }.assertTrue { lastObject ->
+                        classDeclaration
+                            .declarations(includeNested = false, includeLocal = false)
+                            .last() == lastObject
+                    }
             }
     }
 

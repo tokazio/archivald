@@ -8,26 +8,28 @@ import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 
 class KonsistKspKoPackageDeclaration(
     private val logger: Logger,
-    private val inner: ClassDeclaration,
+    private val classDeclaration: ClassDeclaration,
 ) : KoPackageDeclaration {
-    override val containingFile: KoFileDeclaration = KonsistKspKoFileDeclaration(logger, inner.containingFile)
+    override val containingFile: KoFileDeclaration =
+        KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
 
     override val location: String
         get() = TODO("Not yet implemented")
+
     override val locationWithText: String
         get() = TODO("Not yet implemented")
 
-    override fun hasNameContaining(text: String): Boolean = inner.packageName.contains(text)
+    override fun hasNameContaining(text: String): Boolean = classDeclaration.packageName.contains(text)
 
-    override fun hasNameEndingWith(suffix: String): Boolean = inner.packageName.endsWith(suffix)
+    override fun hasNameEndingWith(suffix: String): Boolean = classDeclaration.packageName.endsWith(suffix)
 
     override fun hasNameMatching(regex: Regex): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun hasNameStartingWith(prefix: String): Boolean = inner.packageName.startsWith(prefix)
+    override fun hasNameStartingWith(prefix: String): Boolean = classDeclaration.packageName.startsWith(prefix)
 
-    override val name: String = inner.packageName
+    override val name: String = classDeclaration.packageName
 
     override val hasMatchingPath: Boolean =
         path
@@ -42,7 +44,7 @@ class KonsistKspKoPackageDeclaration(
     }
 
     override val path: String
-        get() = inner.containingFile.filePath
+        get() = classDeclaration.containingFile.filePath
 
     override val projectPath: String
         get() = TODO("Not yet implemented")
@@ -74,5 +76,5 @@ class KonsistKspKoPackageDeclaration(
     override val text: String
         get() = TODO("Not yet implemented")
 
-    override fun toString(): String = inner.toString()
+    override fun toString(): String = classDeclaration.toString()
 }
