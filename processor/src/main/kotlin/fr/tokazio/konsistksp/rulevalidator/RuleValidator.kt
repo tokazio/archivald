@@ -129,7 +129,7 @@ class RuleValidator(
                                 ex.targetException,
                             )
                         } else {
-                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}")
+                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
                             throw ex
                         }
                     }
@@ -148,7 +148,7 @@ class RuleValidator(
                                 ex.targetException,
                             )
                         } else {
-                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}")
+                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
                             throw ex
                         }
                     }
