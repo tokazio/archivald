@@ -12,6 +12,8 @@ import fr.tokazio.konsistksp.internal.model.Annotated
 import fr.tokazio.konsistksp.internal.model.Node
 import fr.tokazio.konsistksp.konsist.*
 import fr.tokazio.konsistksp.ksp.KONSIST_KSP_CLASSPATH_OPTION
+import fr.tokazio.konsistksp.ksp.KONSIST_KSP_FAILFAST_OPTION
+import fr.tokazio.konsistksp.ksp.KONSIST_KSP_LOG_SUCCESS_OPTION
 import fr.tokazio.konsistksp.ksp.KONSIST_KSP_PROJECT_BASE_OPTION
 import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspNode
 import fr.tokazio.konsistksp.rulevalidator.finder.ClasspathRuleFinder
@@ -29,7 +31,7 @@ import java.lang.reflect.InvocationTargetException
  */
 class RuleValidator(
     private val logger: Logger,
-    options: Map<String, String>,
+    private val options: Map<String, String>,
 ) : RuleProcessor {
     private lateinit var konsistScopeCreator: KonsistKspKoScopeCreator
 
@@ -61,6 +63,12 @@ class RuleValidator(
 
     override fun process(resolver: SymbolResolver): List<Annotated> {
         logger.info("Starting rules validation...")
+        if (options[KONSIST_KSP_LOG_SUCCESS_OPTION] == "false") {
+            logger.info("Success will not be shown, $KONSIST_KSP_LOG_SUCCESS_OPTION")
+        }
+        if (options[KONSIST_KSP_FAILFAST_OPTION] == "false") {
+            logger.info("Fail fast is off, $KONSIST_KSP_FAILFAST_OPTION")
+        }
         konsistScopeCreator =
             KonsistKspKoScopeCreator(
                 logger,
@@ -115,14 +123,14 @@ class RuleValidator(
                             String::class.java,
                         )
                     val architectureRuleAnnotation = f.annotations.first() as ArchitectureRule
-                    val failureMessage = architectureRuleAnnotation.value.ifEmpty { functionName }
-                    logger.debug("applying rule '$failureMessage' (from ${instance::class.qualifiedName}) (no base package) ...")
+                    val ruleDescription = architectureRuleAnnotation.value.ifEmpty { functionName }
+                    logger.debug("applying rule '$ruleDescription' (from ${instance::class.qualifiedName}) (no base package) ...")
                     try {
                         f.invoke(instance, konsistScopeCreator, "")
-                        logger.info("✅ successfully applied rule '$failureMessage' from ${instance::class.qualifiedName}")
+                        success(ruleDescription, instance)
                     } catch (ex: InvocationTargetException) {
                         if (ex.cause is KonsistKspKoAssertionFailedException) {
-                            handleAssertionException(failureMessage, ex.cause as KonsistKspKoAssertionFailedException)
+                            handleAssertionException(ruleDescription, ex.cause as KonsistKspKoAssertionFailedException)
                         } else if (ex.targetException is KoAssertionFailedException) {
                             throw IllegalStateException(
                                 "⛔ This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
@@ -138,14 +146,14 @@ class RuleValidator(
                 } catch (_: NoSuchMethodException) {
                     val f = instance.javaClass.getMethod(functionName, KonsistKspScopeCreator::class.java)
                     val architectureRuleAnnotation = f.annotations.first() as ArchitectureRule
-                    val failureMessage = architectureRuleAnnotation.value.ifEmpty { functionName }
-                    logger.debug("applying rule '$failureMessage' (from ${instance::class.qualifiedName}) ...")
+                    val ruleDescription = architectureRuleAnnotation.value.ifEmpty { functionName }
+                    logger.debug("applying rule '$ruleDescription' (from ${instance::class.qualifiedName}) ...")
                     try {
                         f.invoke(instance, konsistScopeCreator)
-                        logger.info("✅ successfully applied rule '$failureMessage' from ${instance::class.qualifiedName}")
+                        success(ruleDescription, instance)
                     } catch (ex: InvocationTargetException) {
                         if (ex.cause is KonsistKspKoAssertionFailedException) {
-                            handleAssertionException(failureMessage, ex.cause as KonsistKspKoAssertionFailedException)
+                            handleAssertionException(ruleDescription, ex.cause as KonsistKspKoAssertionFailedException)
                         } else if (ex.targetException is KoAssertionFailedException) {
                             throw IllegalStateException(
                                 "⛔ This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
@@ -161,6 +169,13 @@ class RuleValidator(
                 }
             }
         }
+        if (!errors.isEmpty()) {
+            logger.warn("❌ ${errors.size} failure(s)")
+            errors.forEach {
+                failureWarn(it.first, it.second)
+            }
+            logger.error("")
+        }
         return emptyList()
     }
 
@@ -169,27 +184,25 @@ class RuleValidator(
         ex: KonsistKspKoAssertionFailedException,
     ) {
         ex.failedItems.forEach {
-            logger.debug("❌ rule '$failureMessage' failed (at '${it::class.java.name}' level)")
+            logger.debug("X rule '$failureMessage' failed (at '${it::class.java.name}' level)")
 
             when (it) {
                 is KonsistKspKoClassDeclaration ->
                     fail(
                         "'$failureMessage' failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
                         it.classDeclaration.containingFile,
-                        ex,
                     )
 
-                is KonsistKspKoFileDeclaration -> fail("'$failureMessage' failed at file://${it.path}:1", it.file, ex)
+                is KonsistKspKoFileDeclaration -> fail("'$failureMessage' failed at file://${it.path}:1", it.file)
                 is KonsistKspKoImportDeclaration -> {
                     val message =
                         "'$failureMessage' but found 'import ${it.importString}' at file://${it.location}:${it.konsistKspImport.location.lineNumber}"
-                    fail(message, KonsistKspNode(it.konsistKspImport), ex)
+                    fail(message, KonsistKspNode(it.konsistKspImport))
                 }
                 is KonsistKspKoObjectDeclaration -> {
                     fail(
                         "'$failureMessage' failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
                         it.classDeclaration,
-                        ex,
                     )
                 }
 
@@ -197,7 +210,6 @@ class RuleValidator(
                     fail(
                         "Validation error unknown: ${it::class.java}, you should handle it in ${this::class.java.simpleName}.handleAssertionException",
                         null,
-                        ex,
                     )
             }
         }
@@ -206,9 +218,29 @@ class RuleValidator(
     private fun fail(
         message: String,
         node: Node? = null,
-        ex: Throwable,
     ) {
-        logger.error(message, node)
-        // throw IllegalStateException(message)
+        if (options[KONSIST_KSP_FAILFAST_OPTION] == "true") {
+            logger.error("❌ $message", node)
+        } else {
+            errors.add(message to node)
+        }
+    }
+
+    private fun failureWarn(
+        message: String,
+        node: Node? = null,
+    ) {
+        logger.warn("❌ $message", node)
+    }
+
+    private val errors = mutableListOf<Pair<String, Node?>>()
+
+    private fun success(
+        ruleDescription: String,
+        instance: Any,
+    ) {
+        if (options[KONSIST_KSP_LOG_SUCCESS_OPTION] == "true") {
+            logger.info("✅ successfully applied rule '$ruleDescription' from ${instance::class.qualifiedName}")
+        }
     }
 }
