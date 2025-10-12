@@ -12,10 +12,10 @@ interface CommonSymbolProcessorProvider : SymbolProcessorProvider {
         environment: SymbolProcessorEnvironment,
     ) {
         if (environment.options.isEmpty()) {
-            logger.info("$name option: no option found, define at least the '$KONSIST_KSP_PROJECT_BASE_OPTION'")
+            logger.debug("$name option: no option found, define at least the '$KONSIST_KSP_PROJECT_BASE_OPTION'")
         } else {
             environment.options.forEach {
-                logger.info("$name option: ${it.key}=${it.value}")
+                logger.debug("$name option: ${it.key}=${it.value}")
             }
         }
     }

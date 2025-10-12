@@ -5,18 +5,26 @@ tasks.register("clean") {
 
 tasks.register("build") {
     group = "build"
-    dependsOn gradle.includedBuilds*.task(':build')
+    dependsOn(
+            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+                gradle.includedBuild(it).task(':build')
+            }
+    )
 }
 
 tasks.register("jar") {
     group = "build"
-    dependsOn gradle.includedBuilds*.task(':jar')
+    dependsOn(
+            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+                gradle.includedBuild(it).task(':jar')
+            }
+    )
 }
 
 tasks.register("publish") {
     group = "publishing"
     dependsOn(
-            ['annotations', 'processor', 'standard-rules'].collect {
+            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
                 gradle.includedBuild(it).task(':publish')
             }
     )

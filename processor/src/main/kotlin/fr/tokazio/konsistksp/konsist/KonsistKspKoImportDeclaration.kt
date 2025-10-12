@@ -25,8 +25,7 @@ class KonsistKspKoImportDeclaration(
         get() = TODO("Not yet implemented")
     override val moduleName: String
         get() = TODO("Not yet implemented")
-    override val name: String
-        get() = TODO("Not yet implemented")
+    override val name: String = importString
     override val path: String
         get() = TODO("Not yet implemented")
     override val projectPath: String

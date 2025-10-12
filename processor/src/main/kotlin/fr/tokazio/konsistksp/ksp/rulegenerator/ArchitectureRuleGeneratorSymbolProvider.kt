@@ -19,7 +19,7 @@ class ArchitectureRuleGeneratorSymbolProvider : CommonSymbolProcessorProvider {
                 options = environment.options,
             )
         } else {
-            logger.info(
+            logger.debug(
                 "used as a 'validator' (using ${KonsistValidatorSymbolProcessor::class.java.simpleName}) because a '$KONSIST_KSP_CLASSPATH_OPTION' configuration was found",
             )
             KonsistValidatorNoOpSymbolProcessor()

@@ -9,6 +9,7 @@ import fr.tokazio.konsistksp.internal.SymbolResolver
 import fr.tokazio.konsistksp.internal.kotlin.KotlinCompiler
 import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.Annotated
+import fr.tokazio.konsistksp.internal.model.Node
 import fr.tokazio.konsistksp.konsist.KonsistKspKoClassDeclaration
 import fr.tokazio.konsistksp.konsist.KonsistKspKoFileDeclaration
 import fr.tokazio.konsistksp.konsist.KonsistKspKoImportDeclaration
@@ -116,39 +117,41 @@ class RuleValidator(
                             KonsistKspScopeCreator::class.java,
                             String::class.java,
                         )
-                    logger.info("applying rule $functionName (from ${instance::class.qualifiedName}) (no base package) ...")
+                    logger.debug("applying rule $functionName (from ${instance::class.qualifiedName}) (no base package) ...")
                     try {
                         f.invoke(instance, konsistScopeCreator, "")
-                        logger.debug("successfully applied rule $functionName from ${instance::class.qualifiedName}")
+                        logger.info("✅ successfully applied rule $functionName from ${instance::class.qualifiedName}")
                     } catch (ex: InvocationTargetException) {
                         if (ex.cause is KonsistKspKoAssertionFailedException) {
                             handleAssertionException(ex.cause as KonsistKspKoAssertionFailedException)
                         } else if (ex.targetException is KoAssertionFailedException) {
                             throw IllegalStateException(
-                                "This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
+                                "⛔ This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
                                 ex.targetException,
                             )
                         } else {
-                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
+                            logger.error(
+                                "⛔ Invoking '$f' caused exception '${ex::class.java.name}': ${ex.message}\n${ex.stackTraceToString()}",
+                            )
                             throw ex
                         }
                     }
                 } catch (ex: NoSuchMethodException) {
                     val f = instance.javaClass.getMethod(functionName, KonsistKspScopeCreator::class.java)
-                    logger.info("applying rule $functionName (from ${instance::class.qualifiedName}) ...")
+                    logger.debug("applying rule $functionName (from ${instance::class.qualifiedName}) ...")
                     try {
                         f.invoke(instance, konsistScopeCreator)
-                        logger.debug("successfully applied rule $functionName from ${instance::class.qualifiedName}")
+                        logger.info("✅ successfully applied rule $functionName from ${instance::class.qualifiedName}")
                     } catch (ex: InvocationTargetException) {
                         if (ex.cause is KonsistKspKoAssertionFailedException) {
                             handleAssertionException(ex.cause as KonsistKspKoAssertionFailedException)
                         } else if (ex.targetException is KoAssertionFailedException) {
                             throw IllegalStateException(
-                                "This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
+                                "⛔ This rule is using com.lemonappdev.konsist.api.verify.assertTrue or import com.lemonappdev.konsist.api.verify.assertFalse instead of fr.tokazio.konsistksp.assertTrue or fr.tokazio.konsistksp.assertFalse",
                                 ex.targetException,
                             )
                         } else {
-                            logger.error("Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
+                            logger.error("⛔ Invoking $f caused exception ${ex::class.java.name}: ${ex.message}\n${ex.stackTraceToString()}")
                             throw ex
                         }
                     }
@@ -160,18 +163,33 @@ class RuleValidator(
 
     private fun handleAssertionException(ex: KonsistKspKoAssertionFailedException) {
         ex.failedItems.forEach {
-            logger.debug("rule failed at ${it::class.java.name} level")
+            logger.debug("❌ rule failed at '${it::class.java.name}' level")
             when (it) {
-                is KonsistKspKoClassDeclaration -> logger.error("${ex.testName} failed", it.inner.containingFile)
-                is KonsistKspKoFileDeclaration -> logger.error("${ex.testName} failed", it.file)
+                is KonsistKspKoClassDeclaration ->
+                    fail(
+                        "${ex.testName} failed at file://${it.location}:1",
+                        it.inner.containingFile,
+                        ex,
+                    )
+
+                is KonsistKspKoFileDeclaration -> fail("${ex.testName} failed at file://${it.path}:1", it.file, ex)
                 is KonsistKspKoImportDeclaration -> {
                     val message =
                         "${ex.testName} but found 'import ${it.importString}' at file://${it.location}:${it.konsistKspImport.location.lineNumber}"
-                    logger.error(message, KonsistKspNode(it.konsistKspImport))
+                    fail(message, KonsistKspNode(it.konsistKspImport), ex)
                 }
 
-                else -> logger.error("Validation error unknown: ${it::class.java}")
+                else -> fail("Validation error unknown: ${it::class.java}", null, ex)
             }
         }
+    }
+
+    private fun fail(
+        message: String,
+        node: Node? = null,
+        ex: Throwable,
+    ) {
+        logger.error(message, node)
+        // throw IllegalStateException(message)
     }
 }

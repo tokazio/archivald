@@ -148,6 +148,9 @@ Re run it
  ./gradlew -Dorg.gradle.debug=true -Dkotlin.daemon.jvm.options="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" :konsist-example-project:kspKotlin
 ```
 
+add `--rerun-tasks` to force recompilation
+add `--stacktrace` to have detailed errors
+
 # Logging
 
 Define these 'gradle.properties' to enable logging:
