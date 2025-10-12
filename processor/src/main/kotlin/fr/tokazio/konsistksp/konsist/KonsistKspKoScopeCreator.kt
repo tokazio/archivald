@@ -2,9 +2,9 @@ package fr.tokazio.konsistksp.konsist
 
 import com.lemonappdev.konsist.api.container.KoScope
 import fr.tokazio.konsistksp.KonsistKspScopeCreator
-import fr.tokazio.konsistksp.api.File
-import fr.tokazio.konsistksp.api.Logger
-import fr.tokazio.konsistksp.api.SymbolResolver
+import fr.tokazio.konsistksp.internal.SymbolResolver
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.File
 
 class KonsistKspKoScopeCreator(
     private val logger: Logger,

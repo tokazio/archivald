@@ -4,10 +4,12 @@ import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
 import com.lemonappdev.konsist.api.declaration.KoImportAliasDeclaration
 import com.lemonappdev.konsist.api.declaration.KoImportDeclaration
 import com.lemonappdev.konsist.api.provider.KoDeclarationCastProvider
-import fr.tokazio.konsistksp.resolver.KonsistKspImport
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspImport
 import kotlin.reflect.KClass
 
 class KonsistKspKoImportDeclaration(
+    private val logger: Logger,
     val konsistKspImport: KonsistKspImport,
     val importString: String,
 ) : KoImportDeclaration {

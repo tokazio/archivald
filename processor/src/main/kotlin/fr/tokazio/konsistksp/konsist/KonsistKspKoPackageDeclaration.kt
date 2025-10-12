@@ -3,8 +3,8 @@ package fr.tokazio.konsistksp.konsist
 import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
 import com.lemonappdev.konsist.api.declaration.KoPackageDeclaration
 import com.lemonappdev.konsist.core.util.PathUtil.separator
-import fr.tokazio.konsistksp.api.ClassDeclaration
-import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 
 class KonsistKspKoPackageDeclaration(
     private val logger: Logger,

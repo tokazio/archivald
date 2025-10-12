@@ -4,26 +4,38 @@ import com.lemonappdev.konsist.core.exception.KoAssertionFailedException
 import fr.tokazio.konsistksp.ArchitectureRule
 import fr.tokazio.konsistksp.KonsistKspKoAssertionFailedException
 import fr.tokazio.konsistksp.KonsistKspScopeCreator
-import fr.tokazio.konsistksp.api.Annotated
-import fr.tokazio.konsistksp.api.Logger
-import fr.tokazio.konsistksp.api.RuleProcessor
-import fr.tokazio.konsistksp.api.SymbolResolver
+import fr.tokazio.konsistksp.internal.RuleProcessor
+import fr.tokazio.konsistksp.internal.SymbolResolver
+import fr.tokazio.konsistksp.internal.kotlin.KotlinCompiler
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.Annotated
 import fr.tokazio.konsistksp.konsist.KonsistKspKoClassDeclaration
 import fr.tokazio.konsistksp.konsist.KonsistKspKoFileDeclaration
 import fr.tokazio.konsistksp.konsist.KonsistKspKoImportDeclaration
 import fr.tokazio.konsistksp.konsist.KonsistKspKoScopeCreator
-import fr.tokazio.konsistksp.kotlin.KotlinCompiler
-import fr.tokazio.konsistksp.resolver.KonsistKspNode
+import fr.tokazio.konsistksp.ksp.KONSIST_KSP_CLASSPATH_OPTION
+import fr.tokazio.konsistksp.ksp.KONSIST_KSP_PROJECT_BASE_OPTION
+import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspNode
+import fr.tokazio.konsistksp.rulevalidator.finder.ClasspathRuleFinder
+import fr.tokazio.konsistksp.rulevalidator.finder.SrcRuleFinder
 import java.io.File
 import java.lang.reflect.InvocationTargetException
 
+// Should not use com.google.devtools.ksp
+// Should not use com.lemonappdev.konsist
+
+/**
+ * Validate the compiling files against a set of `@ArchitectureRule` collected from:
+ * * src/rules of the same project
+ * * META-INF/`TARGET_RULE_FILE` of some jars from the classpath (given as the processor option `KONSIST_KSP_CLASSPATH_OPTION`)
+ */
 class RuleValidator(
     private val logger: Logger,
     options: Map<String, String>,
 ) : RuleProcessor {
     private lateinit var konsistScopeCreator: KonsistKspKoScopeCreator
 
-    private val projectBase: File = File(options["konsistKspProjectBase"]!!)
+    private val projectBase: File = File(options[KONSIST_KSP_PROJECT_BASE_OPTION]!!)
 
     private val kotlinCompiler = KotlinCompiler(projectBase, logger, options)
 
@@ -31,7 +43,7 @@ class RuleValidator(
         listOf(
             ClasspathRuleFinder(
                 logger = logger,
-                classpath = options["konsistKspClasspath"]?.split(":") ?: emptyList(),
+                classpath = options[KONSIST_KSP_CLASSPATH_OPTION]?.split(":") ?: emptyList(),
             ),
             SrcRuleFinder(
                 logger = logger,
@@ -78,7 +90,9 @@ class RuleValidator(
                                     }.map {
                                         it.name
                                     }
-                            logger.debug("rule class $clazz containing ${functionNames.size} function @ArchitectureRule")
+                            logger.debug(
+                                "rule class $clazz containing ${functionNames.size} function @${ArchitectureRule::class.java.simpleName}",
+                            )
                             if (functionNames.isNotEmpty()) {
                                 val instance = clazz.getDeclaredConstructor().newInstance()
                                 instance to functionNames

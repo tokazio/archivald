@@ -6,10 +6,12 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
-import fr.tokazio.konsistksp.api.ClassDeclaration
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import kotlin.reflect.KClass
 
 class KonsistKspKoObjectDeclaration(
+    private val logger: Logger,
     private val inner: ClassDeclaration,
 ) : KoObjectDeclaration {
     override val fullyQualifiedName: String?
@@ -33,7 +35,8 @@ class KonsistKspKoObjectDeclaration(
 
     override val name: String
         get() = TODO("Not yet implemented")
-    override val packagee: KoPackageDeclaration?
+
+    override val packagee: KoPackageDeclaration
         get() = TODO("Not yet implemented")
 
     override fun resideInPackage(name: String): Boolean {
@@ -829,10 +832,13 @@ class KonsistKspKoObjectDeclaration(
 
     override val hasKDoc: Boolean
         get() = TODO("Not yet implemented")
-    override val kDoc: KoKDocDeclaration?
+
+    override val kDoc: KoKDocDeclaration
         get() = TODO("Not yet implemented")
+
     override val location: String
         get() = TODO("Not yet implemented")
+
     override val locationWithText: String
         get() = TODO("Not yet implemented")
 
@@ -1342,7 +1348,7 @@ class KonsistKspKoObjectDeclaration(
         TODO("Not yet implemented")
     }
 
-    override val parentClass: KoParentDeclaration?
+    override val parentClass: KoParentDeclaration
         get() = TODO("Not yet implemented")
 
     override val hasCompanionModifier: Boolean

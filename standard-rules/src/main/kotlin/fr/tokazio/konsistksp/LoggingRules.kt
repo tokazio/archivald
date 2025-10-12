@@ -1,7 +1,5 @@
 package fr.tokazio.konsistksp
 
-import com.lemonappdev.konsist.api.verify.assertTrue
-
 class LoggingRules {
     /**
      * Rule is:

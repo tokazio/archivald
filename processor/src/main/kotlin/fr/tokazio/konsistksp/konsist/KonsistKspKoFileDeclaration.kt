@@ -8,11 +8,12 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
-import fr.tokazio.konsistksp.api.ClassDeclaration
-import fr.tokazio.konsistksp.api.File
-import fr.tokazio.konsistksp.api.Logger
-import fr.tokazio.konsistksp.resolver.KonsistKspFile
-import fr.tokazio.konsistksp.resolver.KonsistKspImport
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.Annotation
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
+import fr.tokazio.konsistksp.internal.model.File
+import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspFile
+import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspImport
 import kotlin.reflect.KClass
 
 class KonsistKspKoFileDeclaration(
@@ -22,7 +23,7 @@ class KonsistKspKoFileDeclaration(
     override val annotations: List<KoAnnotationDeclaration>
         get() =
             file.annotations
-                .map { annotation: fr.tokazio.konsistksp.api.Annotation ->
+                .map { annotation: Annotation ->
                     KonsistKspKoAnnotationDeclaration(logger, annotation)
                 }.toList()
     override val extension: String
@@ -1123,6 +1124,7 @@ class KonsistKspKoFileDeclaration(
                 if (importStatement.isNotEmpty()) {
                     imports.add(
                         KonsistKspKoImportDeclaration(
+                            logger = logger,
                             konsistKspImport =
                                 KonsistKspImport(
                                     location =

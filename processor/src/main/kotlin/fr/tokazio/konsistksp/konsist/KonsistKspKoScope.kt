@@ -6,7 +6,7 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
-import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.internal.logger.Logger
 
 class KonsistKspKoScope(
     private val logger: Logger,

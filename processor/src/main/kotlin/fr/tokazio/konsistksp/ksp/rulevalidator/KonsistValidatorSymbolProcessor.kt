@@ -4,9 +4,9 @@ import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import fr.tokazio.konsistksp.logger.KonsistKspLogger
-import fr.tokazio.konsistksp.resolver.KonsistKspAnnotated
-import fr.tokazio.konsistksp.resolver.KonsistKspSymbolResolver
+import fr.tokazio.konsistksp.ksp.bridge.KonsistKspSymbolResolver
+import fr.tokazio.konsistksp.ksp.bridge.logger.KonsistKspLogger
+import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspAnnotated
 import fr.tokazio.konsistksp.rulevalidator.RuleValidator
 
 class KonsistValidatorSymbolProcessor(

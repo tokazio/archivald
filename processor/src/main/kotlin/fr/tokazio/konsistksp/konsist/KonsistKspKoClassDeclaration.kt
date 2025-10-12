@@ -6,8 +6,8 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndOb
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
-import fr.tokazio.konsistksp.api.ClassDeclaration
-import fr.tokazio.konsistksp.api.Logger
+import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import kotlin.reflect.KClass
 
 class KonsistKspKoClassDeclaration(
@@ -825,7 +825,7 @@ class KonsistKspKoClassDeclaration(
     override val hasKDoc: Boolean
         get() = TODO("Not yet implemented")
 
-    override val kDoc: KoKDocDeclaration?
+    override val kDoc: KoKDocDeclaration
         get() = TODO("Not yet implemented")
 
     override val location: String = inner.containingFile.filePath
@@ -936,7 +936,7 @@ class KonsistKspKoClassDeclaration(
             .filter {
                 it.isObject || it.isCompanionObject
             }.map {
-                KonsistKspKoObjectDeclaration(it)
+                KonsistKspKoObjectDeclaration(logger, it)
             }.toList()
 
     override fun countParentInterfaces(
@@ -1487,10 +1487,12 @@ class KonsistKspKoClassDeclaration(
         TODO("Not yet implemented")
     }
 
-    override val parentClass: KoParentDeclaration?
+    override val parentClass: KoParentDeclaration
         get() = TODO("Not yet implemented")
+
     override val hasAbstractModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasAnnotationModifier: Boolean
         get() = TODO("Not yet implemented")
 
@@ -1512,6 +1514,7 @@ class KonsistKspKoClassDeclaration(
 
     override val constructors: List<KoConstructorDeclaration>
         get() = TODO("Not yet implemented")
+
     override val numConstructors: Int
         get() = TODO("Not yet implemented")
 
@@ -1555,19 +1558,26 @@ class KonsistKspKoClassDeclaration(
 
     override val enumConstants: List<KoEnumConstantDeclaration>
         get() = TODO("Not yet implemented")
+
     override val numEnumConstants: Int
         get() = TODO("Not yet implemented")
+
     override val hasEnumModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasFinalModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasInnerModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasOpenModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasPrimaryConstructor: Boolean
         get() = TODO("Not yet implemented")
-    override val primaryConstructor: KoPrimaryConstructorDeclaration?
+
+    override val primaryConstructor: KoPrimaryConstructorDeclaration
         get() = TODO("Not yet implemented")
 
     override fun countSecondaryConstructors(predicate: (KoSecondaryConstructorDeclaration) -> Boolean): Int {

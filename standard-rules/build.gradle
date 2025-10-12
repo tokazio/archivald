@@ -14,7 +14,7 @@ repositories {
 dependencies {
     implementation "fr.tokazio.konsistksp:konsistksp-annotations"
     // Generate META-INF/architecture-rules with @ArchitectureRule
-    ksp "fr.tokazio.konsistksp:konsistksp-processor"//:${libs.versions.me.version.get()}"
+    ksp "fr.tokazio.konsistksp:konsistksp-processor"
 
     implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 
