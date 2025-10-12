@@ -47,7 +47,7 @@ class StyleRules {
      * Rule is:
      * companion object is last declaration in the class
      */
-    @ArchitectureRule
+    @ArchitectureRule("companion object is last declaration in the class")
     fun companionObjectIsLastDeclarationInTheClass(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,

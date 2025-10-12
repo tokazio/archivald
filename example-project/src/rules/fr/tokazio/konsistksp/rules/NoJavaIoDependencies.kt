@@ -5,14 +5,14 @@ import fr.tokazio.konsistksp.KonsistKspScopeCreator
 import fr.tokazio.konsistksp.assertFalse
 
 class NoJavaIoDependencies {
-    @ArchitectureRule
+    @ArchitectureRule("No java.io dependencies should be used")
     fun noJavaIoDependencies(konsistScope: KonsistKspScopeCreator) {
         konsistScope
             .scopeFromPackage(BASE_PACKAGE)
             .files
             .flatMap {
                 it.imports
-            }.assertFalse(testName = "should not use java.io dependencies") { import ->
+            }.assertFalse { import ->
                 import.hasNameStartingWith("java.io")
             }
     }
