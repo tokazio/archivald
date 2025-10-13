@@ -2,6 +2,7 @@ package fr.tokazio.konsistksp.rulevalidator
 
 import com.lemonappdev.konsist.core.exception.KoAssertionFailedException
 import fr.tokazio.konsistksp.ArchitectureRule
+import fr.tokazio.konsistksp.AssertionResults
 import fr.tokazio.konsistksp.KonsistKspKoAssertionFailedException
 import fr.tokazio.konsistksp.internal.RuleProcessor
 import fr.tokazio.konsistksp.internal.SymbolResolver
@@ -149,10 +150,16 @@ class RuleValidator(
         rule: Rule,
         konsistScopeCreator: KonsistKspKoScopeCreator,
     ) = try {
+        AssertionResults.clear()
         if (rule.method.parameterCount == 2) {
             rule.method.invoke(rule.targetInstance, konsistScopeCreator, "")
         } else {
             rule.method.invoke(rule.targetInstance, konsistScopeCreator)
+        }
+        if (AssertionResults.results.isNotEmpty()) {
+            throw InvocationTargetException(
+                AssertionResults.asOneException(),
+            )
         }
         logSuccess(rule)
     } catch (ex: InvocationTargetException) {

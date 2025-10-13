@@ -10,7 +10,7 @@ class ArchitectureSpec : StringSpec() {
 
         "should not use java.io" {
             try {
-                NoJavaIoDependencies().noJavaIoDependencies(OriginalKonsistKspScopeCreator())
+                NoJavaIoDependencies().noJavaIoDependencies(OriginalKonsistKspScopeCreator)
             } catch (ex: KonsistKspKoAssertionFailedException) {
                 ex.asKoAssertionFailedException()
             }
