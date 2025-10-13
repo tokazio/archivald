@@ -44,11 +44,46 @@ ksp {
 
 Has we provide a `konsistKspClasspath` the processor will be used as a validation one.
 
-You can optionally the the debug mode
+You can optionally set the debug mode
 
 ```
 ksp{
     arg("konsistKspDebug", "true")
+}
+```
+
+### Options
+
+#### Success
+
+You can enable/disable success logging with
+
+```
+ksp{
+    arg("konsistKspLogSuccess", "true")
+}
+```
+
+#### Fail fast
+
+Fail fast mode (by default) can be disabled with
+
+```
+ksp{
+    arg("konsistKspFailFast", "false")
+}
+```
+
+Then the failures will be collected and displayed at the end.
+The build will fail.
+
+#### Ignore failures
+
+You could ignore failure, thus not fail the build even if some rules failed
+
+```
+ksp{
+    arg("konsistKspIgnoreFailures", "false")
 }
 ```
 

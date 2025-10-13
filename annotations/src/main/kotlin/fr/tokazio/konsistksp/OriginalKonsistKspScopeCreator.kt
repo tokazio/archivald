@@ -3,7 +3,7 @@ package fr.tokazio.konsistksp
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.container.KoScope
 
-class OriginalKonsistKspScopeCreator : KonsistKspScopeCreator {
+object OriginalKonsistKspScopeCreator : KonsistKspScopeCreator {
     override fun scopeFromDirectories(paths: Collection<String>): KoScope = Konsist.scopeFromDirectories(paths)
 
     override fun scopeFromDirectory(

@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import javax.inject.Inject
 
 class StyleRules {
-    /**
-     * Rule is:
-     * properties are declared before functions
-     */
-    @ArchitectureRule
+    @ArchitectureRule("Declare properties before function", uuid = "ghXnRF")
     fun propertiesAreDeclaredBeforeFunctions(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
@@ -43,11 +39,7 @@ class StyleRules {
             }
     }
 
-    /**
-     * Rule is:
-     * companion object is last declaration in the class
-     */
-    @ArchitectureRule("companion object is last declaration in the class")
+    @ArchitectureRule("Companion object is last declaration in the class", uuid = "Hq9wJG")
     fun companionObjectIsLastDeclarationInTheClass(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
@@ -68,11 +60,7 @@ class StyleRules {
             }
     }
 
-    /**
-     * Rule is:
-     * no empty files allowed
-     */
-    @ArchitectureRule
+    @ArchitectureRule("No empty file allowed", uuid = "pABNWU")
     fun noEmptyFilesAllowed(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
@@ -83,11 +71,7 @@ class StyleRules {
             .assertFalse { it.text.isEmpty() }
     }
 
-    /**
-     * Rule is:
-     * no class should use field injection
-     */
-    @ArchitectureRule
+    @ArchitectureRule("No field injection", uuid = "QUKZwX")
     fun noClassShouldUseFieldInjection(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
@@ -103,26 +87,7 @@ class StyleRules {
             }
     }
 
-    /**
-     * Rule is:
-     * no class should use Java util logging
-     */
-    @ArchitectureRule
-    fun noClassShouldUseJavaUtilLogging(
-        koScopeCreator: KonsistKspScopeCreator,
-        packageName: String,
-    ) {
-        koScopeCreator
-            .scopeFromPackage("$packageName..")
-            .files
-            .assertFalse { it.hasImport { import -> import.name == "java.util.logging.." } }
-    }
-
-    /**
-     * Rule is:
-     * package name must match file path
-     */
-    @ArchitectureRule
+    @ArchitectureRule("Package name must match the file path", "G0cIEE")
     fun packageNameMustMatchFilePath(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,

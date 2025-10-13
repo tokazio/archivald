@@ -1,11 +1,20 @@
 package fr.tokazio.konsistksp
 
+import com.lemonappdev.konsist.api.ext.list.imports
+
 class LoggingRules {
-    /**
-     * Rule is:
-     * do not use a logger from another class
-     */
-    @ArchitectureRule
+    @ArchitectureRule("No java.util.logging", "62KpAK")
+    fun noClassShouldUseJavaUtilLogging(
+        koScopeCreator: KonsistKspScopeCreator,
+        packageName: String,
+    ) {
+        koScopeCreator
+            .scopeFromPackage("$packageName..")
+            .files
+            .assertFalse { it.hasImport { import -> import.name == "java.util.logging.." } }
+    }
+
+    @ArchitectureRule("Do not use a logger from another class", "KoSrE9")
     fun doNotUseALoggerFromAnotherClass(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
@@ -14,23 +23,14 @@ class LoggingRules {
             .scopeFromPackage("$packageName..")
             .files
             .filter { it.sourceSetName == "main" }
-            .assertTrue {
-                if (it.imports.isNotEmpty()) {
-                    !it.hasImport { import ->
-                        import.hasNameContaining("Companion.logger")
-                    }
-                } else {
-                    true
-                }
+            .imports
+            .assertFalse {
+                it.hasNameContaining("Companion.logger")
             }
     }
 
-    /**
-     * Rule is:
-     * prefer WhozLogging insteadof KLogging
-     */
-    @ArchitectureRule
-    fun preferWhozLoggingInsteadOfKLogging(
+    @ArchitectureRule("Do not use mu.KLogging", "eGdogf")
+    fun noMuKLogging(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
@@ -38,14 +38,9 @@ class LoggingRules {
             .scopeFromPackage("$packageName..")
             .files
             .filter { it.sourceSetName == "main" }
-            .assertTrue {
-                if (it.imports.isNotEmpty()) {
-                    !it.hasImport { import ->
-                        import.hasNameContaining("mu.KLogging")
-                    }
-                } else {
-                    true
-                }
+            .imports
+            .assertFalse {
+                it.hasNameContaining("mu.KLogging")
             }
     }
 }
