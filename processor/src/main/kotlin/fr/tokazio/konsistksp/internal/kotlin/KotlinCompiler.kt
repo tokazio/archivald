@@ -67,7 +67,7 @@ class KotlinCompiler(
                 // Additional compiler options can be set here
                 noStdlib = true
                 noReflect = true
-                repl = true
+                repl = false
             }
 
         // Create an instance of the compiler

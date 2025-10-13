@@ -9,7 +9,6 @@ import java.nio.file.Paths
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 class CollectorEngine(
@@ -27,8 +26,21 @@ class CollectorEngine(
     fun collect(pathName: String): List<File> {
         files = CopyOnWriteArrayList()
         async(Paths.get(pathName), 0, (Consumer { file: File -> files!!.add(file) }))
+        while (executorService.getActiveCount() > 0) {
+            try {
+                Thread.sleep(250)
+            } catch (e: InterruptedException) {
+                logger.exception(e)
+            }
+        }
+        while (executorService.getActiveCount() > 0) {
+            try {
+                Thread.sleep(250)
+            } catch (e: InterruptedException) {
+                logger.exception(e)
+            }
+        }
         executorService.shutdown()
-        executorService.awaitTermination(5, TimeUnit.MINUTES)
         return files!!
     }
 
@@ -37,8 +49,14 @@ class CollectorEngine(
         consumer: Consumer<File?>,
     ) {
         async(Paths.get(pathName), 0, consumer)
+        while (executorService.getActiveCount() > 0) {
+            try {
+                Thread.sleep(250)
+            } catch (e: InterruptedException) {
+                logger.exception(e)
+            }
+        }
         executorService.shutdown()
-        executorService.awaitTermination(5, TimeUnit.MINUTES)
     }
 
     private fun async(

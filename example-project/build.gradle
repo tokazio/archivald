@@ -39,7 +39,7 @@ kotlin {
 ksp {
     arg("konsistKspProjectBase", projectDir.absolutePath)
     arg("konsistKspClasspath", configurations.testCompileClasspath.asPath) // testCompileClasspath to use src/rules
-    arg("konsistKspDebug", "false")
+    arg("konsistKspDebug", "true")
     arg("konsistKspFailFast", "false") // true to fail the build at the first rule failure
     arg("konsistKspIgnoreFailures", "false") // true to not fail the build
 }
