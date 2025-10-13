@@ -52,25 +52,17 @@ class KonsistKspClassDeclaration(
 
     override val declarations: Sequence<Declaration> by lazy {
         inner.declarations
-            .mapNotNull {
+            .sortedBy {
+                (it.location as FileLocation).lineNumber
+            }.map {
                 when (it) {
                     is KSClassDeclaration -> KonsistKspClassDeclaration(it, inner.containingFile!!)
                     is KSFunctionDeclaration -> KonsistKspFunctionDeclaration(it)
-                    else -> null
+                    is KSPropertyDeclaration -> KonsistKspPropertyDeclaration(it)
+                    else -> throw IllegalStateException("Unhandled class declaration ${it::class.java.simpleName} $it")
                 }
             }
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as KonsistKspClassDeclaration
-
-        return qualifiedName == other.qualifiedName
-    }
-
-    override fun hashCode(): Int = qualifiedName.hashCode()
 
     override fun toString(): String = inner.toString()
 }

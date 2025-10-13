@@ -5,8 +5,4 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Validated
-class ValidRestController {
-    companion object {
-        // should be at the end
-    }
-}
+class ValidRestController

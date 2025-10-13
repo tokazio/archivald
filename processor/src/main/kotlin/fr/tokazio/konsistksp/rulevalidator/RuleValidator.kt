@@ -194,6 +194,12 @@ class RuleValidator(
                         it.file,
                     )
 
+                is KonsistKspKoPackageDeclaration ->
+                    logFailureWithError(
+                        "'$failureMessage' failed at file://${it.path}:1",
+                        it.classDeclaration,
+                    )
+
                 is KonsistKspKoImportDeclaration -> {
                     val message =
                         "'$failureMessage' but found 'import ${it.importString}' at file://${it.location}:${it.konsistKspImport.location.lineNumber}"

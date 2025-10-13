@@ -10,6 +10,7 @@ import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.File
 import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
+import fr.tokazio.konsistksp.internal.model.PropertyDeclaration
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoAnnotationProvider
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoNameProvider
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoTextProvider
@@ -58,6 +59,7 @@ class KonsistKspKoClassDeclaration(
                     is ClassDeclaration -> KonsistKspKoClassDeclaration(logger, it)
                     is File -> KonsistKspKoFileDeclaration(logger, it)
                     is FunctionDeclaration -> KonsistKspKoFunctionDeclaration(logger, it)
+                    is PropertyDeclaration -> KonsistKspKoPropertyDeclaration(logger, it)
                     else -> throw IllegalStateException("Declaration not handled ${it::class.java.simpleName}")
                 }
             }.toList()

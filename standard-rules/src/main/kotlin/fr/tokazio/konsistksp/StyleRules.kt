@@ -53,15 +53,9 @@ class StyleRules {
                     .firstOrNull { obj ->
                         obj.hasModifier(KoModifier.COMPANION)
                     }.assertTrue { companion ->
-                        val d =
-                            classDeclaration
-                                .declarations(includeNested = false, includeLocal = false)
-                                .lastOrNull()
-                        d?.let {
-                            println(">>>>>>>>>>>>>>>>>>${it::class.java}")
-                            println(">>>>>>>>>>>>>>>>>>${companion::class.java}")
-                        }
-                        d == companion
+                        classDeclaration
+                            .declarations(includeNested = false, includeLocal = false)
+                            .lastOrNull() == companion
                     }
             }
     }

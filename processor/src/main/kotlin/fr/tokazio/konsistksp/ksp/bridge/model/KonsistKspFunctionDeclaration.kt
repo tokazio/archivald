@@ -10,8 +10,7 @@ class KonsistKspFunctionDeclaration(
 ) : FunctionDeclaration {
     override val name: String = inner.simpleName.asString()
 
-    override val parent: Node?
-        get() = inner.parent?.let { KonsistKspNode(it) }
+    override val parent: Node? = inner.parent?.let { KonsistKspNode(it) }
 
     override val parameters: List<ValueParameter> by lazy {
         inner.parameters.map {

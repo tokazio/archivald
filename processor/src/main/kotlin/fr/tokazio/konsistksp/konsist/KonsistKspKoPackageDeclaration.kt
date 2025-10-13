@@ -10,7 +10,7 @@ import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoTextProvider
 
 class KonsistKspKoPackageDeclaration(
     private val logger: Logger,
-    private val classDeclaration: ClassDeclaration,
+    val classDeclaration: ClassDeclaration,
 ) : KoPackageDeclaration,
     KonsistKspKoNameProvider,
     KonsistKspKoTextProvider {

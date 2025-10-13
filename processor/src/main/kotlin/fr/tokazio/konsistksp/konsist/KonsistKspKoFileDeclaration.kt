@@ -36,7 +36,9 @@ class KonsistKspKoFileDeclaration(
 
     override val sourceSetName: String = if (file.filePath.contains("/main/")) "main" else ""
 
-    override val text: String = "KonsistKspKoFileDeclaration?" // TODO
+    override val text: String by lazy {
+        java.io.File(file.filePath).readText()
+    }
 
     override fun classes(
         includeNested: Boolean,

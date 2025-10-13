@@ -91,64 +91,66 @@ interface KonsistKspKoImportProvider :
 
         var inMultiLineComment = false
 
-        for (lineNum in 0..lines.size) {
-            val line = lines[lineNum]
-            val trimmedLine = line.trim()
+        if (lines.isNotEmpty()) {
+            for (lineNum in 0..<lines.size) {
+                val line = lines[lineNum]
+                val trimmedLine = line.trim()
 
-            // Skip empty lines
-            if (trimmedLine.isEmpty()) continue
+                // Skip empty lines
+                if (trimmedLine.isEmpty()) continue
 
-            // Handle multi-line comments
-            if (trimmedLine.startsWith("/*")) {
-                inMultiLineComment = true
-                if (trimmedLine.contains("*/")) {
-                    inMultiLineComment = false
+                // Handle multi-line comments
+                if (trimmedLine.startsWith("/*")) {
+                    inMultiLineComment = true
+                    if (trimmedLine.contains("*/")) {
+                        inMultiLineComment = false
+                    }
+                    continue
                 }
-                continue
-            }
 
-            if (inMultiLineComment) {
-                if (trimmedLine.contains("*/")) {
-                    inMultiLineComment = false
+                if (inMultiLineComment) {
+                    if (trimmedLine.contains("*/")) {
+                        inMultiLineComment = false
+                    }
+                    continue
                 }
-                continue
-            }
 
-            // Skip single-line comments
-            if (trimmedLine.startsWith("//")) continue
+                // Skip single-line comments
+                if (trimmedLine.startsWith("//")) continue
 
-            // Check for import statements
-            if (trimmedLine.startsWith("import ")) {
-                val importStatement = extractImportStatement(trimmedLine)
-                if (importStatement.isNotEmpty()) {
-                    imports.add(
-                        KonsistKspKoImportDeclaration(
-                            logger = logger,
-                            konsistKspImport =
-                                KonsistKspImport(
-                                    location =
-                                        FileLocation(
-                                            filePath = file.filePath,
-                                            lineNumber = lineNum + 1,
-                                        ),
-                                    origin = Origin.KOTLIN,
-                                    parent = file.asKSFile(),
-                                ),
-                            importString = importStatement,
-                        ),
-                    )
+                // Check for import statements
+                if (trimmedLine.startsWith("import ")) {
+                    val importStatement = extractImportStatement(trimmedLine)
+                    if (importStatement.isNotEmpty()) {
+                        imports.add(
+                            KonsistKspKoImportDeclaration(
+                                logger = logger,
+                                konsistKspImport =
+                                    KonsistKspImport(
+                                        location =
+                                            FileLocation(
+                                                filePath = file.filePath,
+                                                lineNumber = lineNum + 1,
+                                            ),
+                                        origin = Origin.KOTLIN,
+                                        parent = file.asKSFile(),
+                                    ),
+                                importString = importStatement,
+                            ),
+                        )
+                    }
                 }
-            }
 
-            // Stop parsing imports when we hit the first non-import, non-comment, non-package declaration
-            if (!trimmedLine.startsWith("package ") &&
-                !trimmedLine.startsWith("import ") &&
-                !trimmedLine.startsWith("@file:") &&
-                !trimmedLine.startsWith("/*") &&
-                !trimmedLine.startsWith("//") &&
-                !trimmedLine.startsWith("*/")
-            ) {
-                break
+                // Stop parsing imports when we hit the first non-import, non-comment, non-package declaration
+                if (!trimmedLine.startsWith("package ") &&
+                    !trimmedLine.startsWith("import ") &&
+                    !trimmedLine.startsWith("@file:") &&
+                    !trimmedLine.startsWith("/*") &&
+                    !trimmedLine.startsWith("//") &&
+                    !trimmedLine.startsWith("*/")
+                ) {
+                    break
+                }
             }
         }
 
