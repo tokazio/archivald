@@ -50,12 +50,18 @@ class StyleRules {
             .forEach { classDeclaration ->
                 classDeclaration
                     .objects(includeNested = false)
-                    .lastOrNull { obj ->
+                    .firstOrNull { obj ->
                         obj.hasModifier(KoModifier.COMPANION)
-                    }.assertTrue { lastObject ->
-                        classDeclaration
-                            .declarations(includeNested = false, includeLocal = false)
-                            .last() == lastObject
+                    }.assertTrue { companion ->
+                        val d =
+                            classDeclaration
+                                .declarations(includeNested = false, includeLocal = false)
+                                .lastOrNull()
+                        d?.let {
+                            println(">>>>>>>>>>>>>>>>>>${it::class.java}")
+                            println(">>>>>>>>>>>>>>>>>>${companion::class.java}")
+                        }
+                        d == companion
                     }
             }
     }

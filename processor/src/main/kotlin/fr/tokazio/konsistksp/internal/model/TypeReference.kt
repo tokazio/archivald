@@ -1,3 +1,5 @@
 package fr.tokazio.konsistksp.internal.model
 
-interface TypeReference : Annotated
+interface TypeReference : Annotated {
+    val name: String
+}

@@ -1,8 +1,5 @@
 package fr.tokazio.konsistksp.konsist
 
-import com.google.devtools.ksp.symbol.FileLocation
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.Origin
 import com.lemonappdev.konsist.api.declaration.*
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceAndObjectDeclaration
 import com.lemonappdev.konsist.api.declaration.combined.KoClassAndInterfaceDeclaration
@@ -12,53 +9,34 @@ import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.Annotation
 import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.File
-import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspFile
-import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspImport
+import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoImportProvider
 import kotlin.reflect.KClass
 
 class KonsistKspKoFileDeclaration(
-    private val logger: Logger,
+    override val logger: Logger,
     val file: File,
-) : KoFileDeclaration {
+) : KoFileDeclaration,
+    KonsistKspKoImportProvider {
     override val annotations: List<KoAnnotationDeclaration>
         get() =
             file.annotations
                 .map { annotation: Annotation ->
                     KonsistKspKoAnnotationDeclaration(logger, annotation)
                 }.toList()
-    override val extension: String
-        get() = "kt"
-    override val hasMatchingPackage: Boolean
-        get() = TODO("Not yet implemented")
-    override val importAliases: List<KoImportAliasDeclaration>
-        get() = TODO("Not yet implemented")
-    override val imports: List<KoImportDeclaration>
-        get() = getImportsFromSourceFile(file)
-    override val moduleName: String
-        get() = TODO("Not yet implemented")
-    override val name: String
-        get() = file.fileName.substringBeforeLast('.')
-    override val nameWithExtension: String
-        get() = file.fileName
-    override val numAnnotations: Int
-        get() = TODO("Not yet implemented")
-    override val numImportAliases: Int
-        get() = TODO("Not yet implemented")
-    override val numImports: Int
-        get() = TODO("Not yet implemented")
-    override val numTypeAliases: Int
-        get() = TODO("Not yet implemented")
-    override val packagee: KoPackageDeclaration
-        get() = TODO("Not yet implemented")
-    override val path: String
-        get() = file.filePath
-    override val projectPath: String
-        get() = TODO("Not yet implemented")
-    override val sourceSetName: String
-        get() = if (file.filePath.contains("/main/")) "main" else ""
-    override val text: String = "text?" // TODO
-    override val typeAliases: List<KoTypeAliasDeclaration>
-        get() = TODO("Not yet implemented")
+
+    override val extension: String = "kt"
+
+    override val imports: List<KoImportDeclaration> = getImportsFromSourceFile(file)
+
+    override val name: String = file.fileName.substringBeforeLast('.')
+
+    override val nameWithExtension: String = file.fileName
+
+    override val path: String = file.filePath
+
+    override val sourceSetName: String = if (file.filePath.contains("/main/")) "main" else ""
+
+    override val text: String = "KonsistKspKoFileDeclaration?" // TODO
 
     override fun classes(
         includeNested: Boolean,
@@ -69,6 +47,50 @@ class KonsistKspKoFileDeclaration(
             .map {
                 KonsistKspKoClassDeclaration(logger, it)
             }.toList()
+
+    override fun countClasses(
+        includeNested: Boolean,
+        includeLocal: Boolean,
+        predicate: (KoClassDeclaration) -> Boolean,
+    ): Int = classes().size
+
+    override fun toString(): String = "${file.filePath}${java.io.File.pathSeparatorChar}${file.fileName}"
+
+    // ================================================================================================================
+    // ================================================================================================================
+    // TODO handle
+    // ================================================================================================================
+    // ================================================================================================================
+
+    override val hasMatchingPackage: Boolean
+        get() = TODO("Not yet implemented")
+
+    override val importAliases: List<KoImportAliasDeclaration>
+        get() = TODO("Not yet implemented")
+
+    override val moduleName: String
+        get() = TODO("Not yet implemented")
+
+    override val numAnnotations: Int
+        get() = TODO("Not yet implemented")
+
+    override val numImportAliases: Int
+        get() = TODO("Not yet implemented")
+
+    override val numImports: Int
+        get() = TODO("Not yet implemented")
+
+    override val numTypeAliases: Int
+        get() = TODO("Not yet implemented")
+
+    override val packagee: KoPackageDeclaration
+        get() = TODO("Not yet implemented")
+
+    override val projectPath: String
+        get() = TODO("Not yet implemented")
+
+    override val typeAliases: List<KoTypeAliasDeclaration>
+        get() = TODO("Not yet implemented")
 
     override fun classesAndInterfaces(
         includeNested: Boolean,
@@ -94,12 +116,6 @@ class KonsistKspKoFileDeclaration(
     override fun countAnnotations(predicate: (KoAnnotationDeclaration) -> Boolean): Int {
         TODO("Not yet implemented")
     }
-
-    override fun countClasses(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-        predicate: (KoClassDeclaration) -> Boolean,
-    ): Int = classes().size
 
     override fun countClassesAndInterfaces(
         includeNested: Boolean,
@@ -607,67 +623,6 @@ class KonsistKspKoFileDeclaration(
         TODO("Not yet implemented")
     }
 
-    override fun hasImport(predicate: (KoImportDeclaration) -> Boolean): Boolean =
-        imports.firstOrNull { koImportDeclaration: KoImportDeclaration ->
-            predicate(koImportDeclaration)
-        } != null
-
-    override fun hasImportAlias(predicate: (KoImportAliasDeclaration) -> Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportAliasWithName(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportAliasWithName(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportAliases(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportAliasesWithAllNames(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportAliasesWithAllNames(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportWithName(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportWithName(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImports(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportsWithAllNames(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasImportsWithAllNames(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun hasInterface(
         includeNested: Boolean,
         predicate: (KoInterfaceDeclaration) -> Boolean,
@@ -1024,8 +979,6 @@ class KonsistKspKoFileDeclaration(
         TODO("Not yet implemented")
     }
 
-    override fun toString(): String = "${file.filePath}${java.io.File.pathSeparatorChar}${file.fileName}"
-
   /*
   private fun getReferencedTypes(ksFile: KSFile): Set<KoImportDeclaration> {
     val referencedTypes = mutableSetOf<KoImportDeclaration>()
@@ -1079,110 +1032,4 @@ class KonsistKspKoFileDeclaration(
   }
 
    */
-
-    private fun getImportsFromSourceFile(file: File): List<KoImportDeclaration> {
-        val imports = mutableListOf<KoImportDeclaration>()
-
-        // Split content into lines
-        val lines =
-            java.io
-                .File(file.filePath)
-                .readText()
-                .lines()
-
-        var inMultiLineComment = false
-
-        for (lineNum in 0..lines.size) {
-            val line = lines[lineNum]
-            val trimmedLine = line.trim()
-
-            // Skip empty lines
-            if (trimmedLine.isEmpty()) continue
-
-            // Handle multi-line comments
-            if (trimmedLine.startsWith("/*")) {
-                inMultiLineComment = true
-                if (trimmedLine.contains("*/")) {
-                    inMultiLineComment = false
-                }
-                continue
-            }
-
-            if (inMultiLineComment) {
-                if (trimmedLine.contains("*/")) {
-                    inMultiLineComment = false
-                }
-                continue
-            }
-
-            // Skip single-line comments
-            if (trimmedLine.startsWith("//")) continue
-
-            // Check for import statements
-            if (trimmedLine.startsWith("import ")) {
-                val importStatement = extractImportStatement(trimmedLine)
-                if (importStatement.isNotEmpty()) {
-                    imports.add(
-                        KonsistKspKoImportDeclaration(
-                            logger = logger,
-                            konsistKspImport =
-                                KonsistKspImport(
-                                    location =
-                                        FileLocation(
-                                            filePath = file.filePath,
-                                            lineNumber = lineNum + 1,
-                                        ),
-                                    origin = Origin.KOTLIN,
-                                    parent = file.asKSFile(),
-                                ),
-                            importString = importStatement,
-                        ),
-                    )
-                }
-            }
-
-            // Stop parsing imports when we hit the first non-import, non-comment, non-package declaration
-            if (!trimmedLine.startsWith("package ") &&
-                !trimmedLine.startsWith("import ") &&
-                !trimmedLine.startsWith("@file:") &&
-                !trimmedLine.startsWith("/*") &&
-                !trimmedLine.startsWith("//") &&
-                !trimmedLine.startsWith("*/")
-            ) {
-                break
-            }
-        }
-
-        return imports
-    }
-
-    private fun extractImportStatement(line: String): String =
-        try {
-            // Remove "import " prefix
-            var importPath =
-                line
-                    .substring(6)
-                    .trim()
-
-            // Handle import aliases (import com.example.LongName as Short)
-            val asIndex = importPath.indexOf(" as ")
-            if (asIndex != -1) {
-                importPath =
-                    importPath
-                        .substring(0, asIndex)
-                        .trim()
-            }
-
-            // Remove semicolon if present (shouldn't be in Kotlin, but just in case)
-            if (importPath.endsWith(";")) {
-                importPath = importPath.substring(0, importPath.length - 1)
-            }
-
-            importPath
-        } catch (_: Exception) {
-            logger.warn("Failed to parse import statement: $line")
-            ""
-        }
 }
-
-private fun File.asKSFile(): KSFile = (this as KonsistKspFile).inner

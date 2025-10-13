@@ -12,10 +12,6 @@ class KonsistKspKoScope(
     private val logger: Logger,
     override val files: List<KoFileDeclaration>,
 ) : KoScope {
-    override val annotations: List<KoAnnotationDeclaration>
-        get() = TODO("Not yet implemented")
-    override val imports: List<KoImportDeclaration>
-        get() = TODO("Not yet implemented")
     override val packages: List<KoPackageDeclaration> =
         files
             .flatMap { koFileDeclaration ->
@@ -23,8 +19,6 @@ class KonsistKspKoScope(
                     koClassDeclaration.packagee
                 }
             }.filterNotNull()
-    override val typeAliases: List<KoTypeAliasDeclaration>
-        get() = TODO("Not yet implemented")
 
     override fun classes(
         includeNested: Boolean,
@@ -33,6 +27,23 @@ class KonsistKspKoScope(
         files.flatMap { koFileDeclaration ->
             koFileDeclaration.classes(includeNested, includeLocal)
         }
+
+    override fun toString(): String {
+        TODO("Not yet implemented")
+    }
+
+    // ================================================================================================================
+    // ================================================================================================================
+    // TODO handle
+    // ================================================================================================================
+    // ================================================================================================================
+
+    override val annotations: List<KoAnnotationDeclaration>
+        get() = TODO("Not yet implemented")
+    override val imports: List<KoImportDeclaration>
+        get() = TODO("Not yet implemented")
+    override val typeAliases: List<KoTypeAliasDeclaration>
+        get() = TODO("Not yet implemented")
 
     override fun classesAndInterfaces(
         includeNested: Boolean,
@@ -117,10 +128,6 @@ class KonsistKspKoScope(
     }
 
     override fun slice(predicate: (KoFileDeclaration) -> Boolean): KoScope {
-        TODO("Not yet implemented")
-    }
-
-    override fun toString(): String {
         TODO("Not yet implemented")
     }
 }

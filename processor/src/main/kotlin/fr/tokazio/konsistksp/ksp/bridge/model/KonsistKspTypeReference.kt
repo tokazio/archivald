@@ -16,6 +16,11 @@ class KonsistKspTypeReference(
             KonsistKspAnnotation(it)
         }
     }
+    override val name: String =
+        inner
+            .resolve()
+            .declaration.qualifiedName
+            ?.asString() ?: throw IllegalStateException("Not resolvable because not in the classpath")
 
     override fun toString(): String = inner.toString()
 }

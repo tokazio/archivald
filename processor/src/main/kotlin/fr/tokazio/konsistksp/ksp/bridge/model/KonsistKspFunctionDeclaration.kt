@@ -8,6 +8,8 @@ import fr.tokazio.konsistksp.internal.model.Annotation
 class KonsistKspFunctionDeclaration(
     internal val inner: KSFunctionDeclaration,
 ) : FunctionDeclaration {
+    override val name: String = inner.simpleName.asString()
+
     override val parent: Node?
         get() = inner.parent?.let { KonsistKspNode(it) }
 
@@ -15,6 +17,14 @@ class KonsistKspFunctionDeclaration(
         inner.parameters.map {
             KonsistKspValueParameter(it)
         }
+    }
+    override val returnType: TypeReference? = inner.returnType?.let { KonsistKspTypeReference(it) }
+
+    override val modifiers: List<Modifier> by lazy {
+        inner.modifiers
+            .map {
+                Modifier.valueOf(it.name)
+            }.toList()
     }
 
     override val annotations: Sequence<Annotation> by lazy {

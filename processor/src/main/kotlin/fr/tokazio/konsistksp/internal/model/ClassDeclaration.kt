@@ -27,5 +27,4 @@ interface ClassDeclaration : Declaration {
                 .substringBefore(separator)
 
     val containingFile: File
-    // val containingDeclaration: BaseDeclaration
 }

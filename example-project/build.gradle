@@ -24,6 +24,12 @@ dependencies {
     // Validate the @ArchitectureRule
     ksp "fr.tokazio.konsistksp:konsistksp-processor:${libs.versions.me.version.get()}"
 
+
+    implementation 'org.springframework:spring-web:7.0.0-M9'
+    testImplementation 'org.springframework:spring-web:7.0.0-M9'
+    implementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
+    testImplementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
+
     // As a testImplementation to use the src/rules
     testImplementation "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"
     // Use standard-rules

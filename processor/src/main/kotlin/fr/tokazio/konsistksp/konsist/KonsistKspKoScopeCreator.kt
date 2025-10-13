@@ -10,6 +10,33 @@ class KonsistKspKoScopeCreator(
     private val logger: Logger,
     private val resolver: SymbolResolver,
 ) : KonsistKspScopeCreator {
+    override fun scopeFromPackage(
+        packagee: String,
+        moduleName: String?,
+        sourceSetName: String?,
+    ): KoScope =
+        KonsistKspKoScope(
+            logger,
+            resolver
+                .getAllFiles()
+                .filter { file: File ->
+                    if (packagee.endsWith("..")) {
+                        file.packageName
+                            .startsWith(packagee.removeSuffix(".."))
+                    } else {
+                        file.packageName == packagee
+                    }
+                }.map { file: File ->
+                    KonsistKspKoFileDeclaration(logger, file)
+                }.toList(),
+        )
+
+    // ================================================================================================================
+    // ================================================================================================================
+    // TODO handle
+    // ================================================================================================================
+    // ================================================================================================================
+
     override val projectRootPath: String
         get() = TODO("Not yet implemented")
 
@@ -56,27 +83,6 @@ class KonsistKspKoScopeCreator(
     override fun scopeFromModules(moduleNames: Collection<String>): KoScope {
         TODO("Not yet implemented")
     }
-
-    override fun scopeFromPackage(
-        packagee: String,
-        moduleName: String?,
-        sourceSetName: String?,
-    ): KoScope =
-        KonsistKspKoScope(
-            logger,
-            resolver
-                .getAllFiles()
-                .filter { file: File ->
-                    if (packagee.endsWith("..")) {
-                        file.packageName
-                            .startsWith(packagee.removeSuffix(".."))
-                    } else {
-                        file.packageName == packagee
-                    }
-                }.map { file: File ->
-                    KonsistKspKoFileDeclaration(logger, file)
-                }.toList(),
-        )
 
     override fun scopeFromProduction(
         moduleName: String?,

@@ -8,108 +8,26 @@ import com.lemonappdev.konsist.api.declaration.combined.KoClassAndObjectDeclarat
 import com.lemonappdev.konsist.api.declaration.combined.KoInterfaceAndObjectDeclaration
 import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.ClassDeclaration
+import fr.tokazio.konsistksp.internal.model.File
+import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
+import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoAnnotationProvider
+import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoNameProvider
+import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoTextProvider
 import kotlin.reflect.KClass
 
 class KonsistKspKoClassDeclaration(
     private val logger: Logger,
     val classDeclaration: ClassDeclaration,
-) : KoClassDeclaration {
-    override fun toString(): String = classDeclaration.toString()
+) : KoBaseDeclaration,
+    KoClassDeclaration,
+    KonsistKspKoAnnotationProvider,
+    KonsistKspKoNameProvider,
+    KonsistKspKoTextProvider {
+    override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, classDeclaration)
 
     override val fullyQualifiedName: String = classDeclaration.qualifiedName
 
-    override fun hasNameContaining(text: String): Boolean = fullyQualifiedName.contains(text)
-
-    override fun hasNameEndingWith(suffix: String): Boolean = fullyQualifiedName.endsWith(suffix)
-
-    override fun hasNameMatching(regex: Regex): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasNameStartingWith(prefix: String): Boolean = fullyQualifiedName.startsWith(prefix)
-
     override val name: String = classDeclaration.qualifiedName
-
-    override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, classDeclaration)
-
-    override fun resideInPackage(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun resideOutsidePackage(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasTextContaining(str: String): Boolean = text.contains(str)
-
-    override fun hasTextEndingWith(suffix: String): Boolean = text.endsWith(suffix)
-
-    override fun hasTextMatching(regex: Regex): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasTextStartingWith(prefix: String): Boolean = text.startsWith(prefix)
-
-    override val text: String
-        get() = TODO("Not yet implemented")
-
-    override fun countAnnotations(predicate: (KoAnnotationDeclaration) -> Boolean): Int = annotations.size
-
-    override fun hasAllAnnotations(predicate: (KoAnnotationDeclaration) -> Boolean): Boolean = annotations.all(predicate)
-
-    override fun hasAllAnnotationsOf(names: Collection<KClass<*>>): Boolean =
-        when {
-            names.isEmpty() -> hasAnnotations()
-            else -> names.all { checkIfAnnotated(it) }
-        }
-
-    override fun hasAllAnnotationsOf(
-        name: KClass<*>,
-        vararg names: KClass<*>,
-    ): Boolean = hasAllAnnotationsOf(listOf(name, *names))
-
-    override fun hasAnnotation(predicate: (KoAnnotationDeclaration) -> Boolean): Boolean = annotations.any(predicate)
-
-    override fun hasAnnotationOf(names: Collection<KClass<*>>): Boolean =
-        when {
-            names.isEmpty() -> hasAnnotations()
-            else -> names.any { checkIfAnnotated(it) }
-        }
-
-    override fun hasAnnotationOf(
-        name: KClass<*>,
-        vararg names: KClass<*>,
-    ): Boolean = hasAnnotationOf(listOf(name, *names))
-
-    override fun hasAnnotationWithName(
-        name: String,
-        vararg names: String,
-    ): Boolean = hasAnnotationWithName(listOf(name, *names))
-
-    override fun hasAnnotationWithName(names: Collection<String>): Boolean =
-        when {
-            names.isEmpty() -> hasAnnotations()
-            else ->
-                names.any {
-                    annotations.any { annotation -> annotation.representsType(it) }
-                }
-        }
-
-    override fun hasAnnotations(): Boolean = annotations.isNotEmpty()
-
-    override fun hasAnnotationsWithAllNames(
-        name: String,
-        vararg names: String,
-    ): Boolean = hasAnnotationsWithAllNames(listOf(name, *names))
-
-    override fun hasAnnotationsWithAllNames(names: Collection<String>): Boolean =
-        when {
-            names.isEmpty() -> hasAnnotations()
-            else ->
-                names.all {
-                    annotations.any { annotation -> annotation.representsType(it) }
-                }
-        }
 
     override val annotations: List<KoAnnotationDeclaration> by lazy {
         classDeclaration.annotations
@@ -118,7 +36,67 @@ class KonsistKspKoClassDeclaration(
             }.toList()
     }
 
-    override val numAnnotations: Int = annotations.size
+    override val numAnnotations: Int by lazy {
+        annotations.size
+    }
+
+    override val containingDeclaration: KoBaseDeclaration
+        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
+
+    override val containingFile: KoFileDeclaration
+        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
+
+    override val text: String = "KonsistKspKoClassDeclaration?"
+
+    override fun declarations(
+        includeNested: Boolean,
+        includeLocal: Boolean,
+    ): List<KoBaseDeclaration> =
+        classDeclaration.declarations
+            .map {
+                when (it) {
+                    is ClassDeclaration -> KonsistKspKoClassDeclaration(logger, it)
+                    is File -> KonsistKspKoFileDeclaration(logger, it)
+                    is FunctionDeclaration -> KonsistKspKoFunctionDeclaration(logger, it)
+                    else -> throw IllegalStateException("Declaration not handled ${it::class.java.simpleName}")
+                }
+            }.toList()
+
+    override val location: String = classDeclaration.containingFile.filePath
+
+    override fun objects(includeNested: Boolean): List<KoObjectDeclaration> =
+        classDeclaration.declarations
+            .filterIsInstance<ClassDeclaration>()
+            .filter {
+                it.isObject || it.isCompanionObject
+            }.map {
+                KonsistKspKoObjectDeclaration(logger, it)
+            }.toList()
+
+    override val sourceSetName: String
+        get() = classDeclaration.sourceSetName
+
+    override fun equals(other: Any?): Boolean =
+        when {
+            other is KonsistKspKoObjectDeclaration -> other.fullyQualifiedName == this.fullyQualifiedName
+            else -> super.equals(other)
+        }
+
+    override fun toString(): String = classDeclaration.toString()
+
+    // ================================================================================================================
+    // ================================================================================================================
+    // TODO handle
+    // ================================================================================================================
+    // ================================================================================================================
+
+    override fun resideInPackage(name: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun resideOutsidePackage(name: String): Boolean {
+        TODO("Not yet implemented")
+    }
 
     override fun classesAndInterfacesAndObjects(
         includeNested: Boolean,
@@ -499,12 +477,6 @@ class KonsistKspKoClassDeclaration(
         TODO("Not yet implemented")
     }
 
-    override val containingDeclaration: KoBaseDeclaration
-        get() = KonsistKspKoDeclaration(logger, classDeclaration.containingFile)
-
-    override val containingFile: KoFileDeclaration
-        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
-
     override fun countDeclarations(
         includeNested: Boolean,
         includeLocal: Boolean,
@@ -512,15 +484,6 @@ class KonsistKspKoClassDeclaration(
     ): Int {
         TODO("Not yet implemented")
     }
-
-    override fun declarations(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): List<KoBaseDeclaration> =
-        classDeclaration.declarations
-            .map {
-                KonsistKspKoDeclaration(logger, it)
-            }.toList()
 
     override fun hasAllDeclarations(
         includeNested: Boolean,
@@ -828,8 +791,6 @@ class KonsistKspKoClassDeclaration(
     override val kDoc: KoKDocDeclaration
         get() = TODO("Not yet implemented")
 
-    override val location: String = classDeclaration.containingFile.filePath
-
     override val locationWithText: String
         get() = TODO("Not yet implemented")
 
@@ -861,6 +822,7 @@ class KonsistKspKoClassDeclaration(
 
     override val modifiers: List<KoModifier>
         get() = TODO("Not yet implemented")
+
     override val numModifiers: Int
         get() = TODO("Not yet implemented")
 
@@ -929,15 +891,6 @@ class KonsistKspKoClassDeclaration(
     override fun numObjects(includeNested: Boolean): Int {
         TODO("Not yet implemented")
     }
-
-    override fun objects(includeNested: Boolean): List<KoObjectDeclaration> =
-        classDeclaration.declarations
-            .filterIsInstance<ClassDeclaration>()
-            .filter {
-                it.isObject || it.isCompanionObject
-            }.map {
-                KonsistKspKoObjectDeclaration(logger, it)
-            }.toList()
 
     override fun countParentInterfaces(
         indirectParents: Boolean,
@@ -1134,6 +1087,7 @@ class KonsistKspKoClassDeclaration(
 
     override val path: String
         get() = TODO("Not yet implemented")
+
     override val projectPath: String
         get() = TODO("Not yet implemented")
 
@@ -1206,21 +1160,24 @@ class KonsistKspKoClassDeclaration(
         TODO("Not yet implemented")
     }
 
-    override val sourceSetName: String
-        get() = classDeclaration.sourceSetName
-
     override val isTopLevel: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasInternalModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasPrivateModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasProtectedModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasPublicModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasPublicOrDefaultModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasActualModifier: Boolean
         get() = TODO("Not yet implemented")
 
@@ -1319,6 +1276,7 @@ class KonsistKspKoClassDeclaration(
 
     override val hasExpectModifier: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasSealedModifier: Boolean
         get() = TODO("Not yet implemented")
 
@@ -1362,10 +1320,13 @@ class KonsistKspKoClassDeclaration(
 
     override val numTypeParameters: Int
         get() = TODO("Not yet implemented")
+
     override val typeParameters: List<KoTypeParameterDeclaration>
         get() = TODO("Not yet implemented")
+
     override val isGeneric: Boolean
         get() = TODO("Not yet implemented")
+
     override val hasDataModifier: Boolean
         get() = TODO("Not yet implemented")
 
@@ -1387,6 +1348,7 @@ class KonsistKspKoClassDeclaration(
 
     override val initBlocks: List<KoInitBlockDeclaration>
         get() = TODO("Not yet implemented")
+
     override val numInitBlocks: Int
         get() = TODO("Not yet implemented")
 
@@ -1598,6 +1560,7 @@ class KonsistKspKoClassDeclaration(
 
     override val numSecondaryConstructors: Int
         get() = TODO("Not yet implemented")
+
     override val secondaryConstructors: List<KoSecondaryConstructorDeclaration>
         get() = TODO("Not yet implemented")
 
@@ -1651,13 +1614,4 @@ class KonsistKspKoClassDeclaration(
 
     override val hasValueModifier: Boolean
         get() = TODO("Not yet implemented")
-
-    private fun checkIfAnnotated(kClass: KClass<*>): Boolean =
-        annotations.any { annotation ->
-            if (kClass.qualifiedName?.startsWith("kotlin.") == true) {
-                annotation.name == kClass.simpleName
-            } else {
-                annotation.fullyQualifiedName == kClass.qualifiedName
-            }
-        }
 }

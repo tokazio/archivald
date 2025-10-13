@@ -61,5 +61,16 @@ class KonsistKspClassDeclaration(
             }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as KonsistKspClassDeclaration
+
+        return qualifiedName == other.qualifiedName
+    }
+
+    override fun hashCode(): Int = qualifiedName.hashCode()
+
     override fun toString(): String = inner.toString()
 }
