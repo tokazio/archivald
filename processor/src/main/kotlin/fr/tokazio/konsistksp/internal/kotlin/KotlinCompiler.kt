@@ -20,7 +20,7 @@ const val CLASSPATH_SEPARATOR = ":"
 class KotlinCompiler(
     projectBase: File,
     private val logger: Logger,
-    private val options: Map<String, String>,
+    options: Map<String, String>,
 ) {
     val rule_classes_path = "${projectBase.absolutePath}/build/ksp/konsist/classes"
     private val cp =
@@ -36,7 +36,7 @@ class KotlinCompiler(
                 override fun write(b: Int) {
                     val c = b.toChar()
                     if (c == '\n') {
-                        logger.debug("Konsist ksp compiler: $buf")
+                        logger.debug("[Konsist ksp dynamic compiler] $buf")
                         buf.clear()
                     } else {
                         buf.append(c)
@@ -67,6 +67,7 @@ class KotlinCompiler(
                 // Additional compiler options can be set here
                 noStdlib = true
                 noReflect = true
+                repl = true
             }
 
         // Create an instance of the compiler

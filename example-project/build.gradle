@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ksp)
+    alias libs.plugins.kotlin.jvm
+    alias libs.plugins.ksp
 }
 
 group = 'fr.tokazio.konsistksp'
@@ -20,6 +20,7 @@ repositories {
 sourceSets.test.java.srcDirs += ['src/rules']
 
 dependencies {
+    ksp "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"
     // Validate the @ArchitectureRule
     ksp "fr.tokazio.konsistksp:konsistksp-processor:${libs.versions.me.version.get()}"
 

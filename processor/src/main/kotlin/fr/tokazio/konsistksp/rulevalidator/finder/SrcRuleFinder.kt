@@ -28,6 +28,7 @@ class SrcRuleFinder(
                     it.endsWith(".kt")
                 }.collect(srcInFolder)
                 .toSet()
+        logger.debug("Found ${ruleSrcFiles.size} to compile from $srcInFolder")
         return try {
             kotlinCompiler.compile(ruleSrcFiles)
             logger.debug("compiled $srcInFolder")
