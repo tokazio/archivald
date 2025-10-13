@@ -28,9 +28,10 @@ class RuleGenerator(
     override fun process(resolver: SymbolResolver): List<Annotated> {
         logger.info("Add @${ArchitectureRule::class.java.simpleName} to META-INF/$TARGET_RULES_FILE...")
         val metaInf =
-            File(
-                "${projectBase.absolutePath}${File.separatorChar}src${File.separatorChar}main${File.separatorChar}resources${File.separatorChar}META-INF",
-            )
+            projectBase
+                .toPath()
+                .resolve("src/main/resources/META-INF")
+                .toFile()
         if (!metaInf.exists()) {
             metaInf.createDirectory()
         }

@@ -35,11 +35,8 @@ class RuleValidator(
     private val options: Map<String, String>,
 ) : RuleProcessor {
     private val projectBase: File = File(options[KONSIST_KSP_PROJECT_BASE_OPTION]!!)
-
     private val kotlinCompiler = KotlinCompiler(projectBase, logger, options)
-
     private val errors = mutableListOf<Pair<String, Node?>>()
-
     private val ruleFinders =
         listOf(
             ClasspathRuleFinder(
@@ -52,7 +49,6 @@ class RuleValidator(
                 kotlinCompiler = kotlinCompiler,
             ),
         )
-
     private val compiledClassFiles: Set<String> =
         ruleFinders.flatMapTo(mutableSetOf()) {
             it.find()
@@ -91,15 +87,6 @@ class RuleValidator(
             logger.error("")
         }
         return emptyList()
-    }
-
-    private fun displayValidationOptions() {
-        if (options[KONSIST_KSP_LOG_SUCCESS_OPTION] == "false") {
-            logger.info("Success will not be shown, $KONSIST_KSP_LOG_SUCCESS_OPTION")
-        }
-        if (options[KONSIST_KSP_FAILFAST_OPTION] == "false") {
-            logger.info("Fail fast is off, $KONSIST_KSP_FAILFAST_OPTION")
-        }
     }
 
     private fun instantiateRuleClass(clazz: Class<*>): Any? =
@@ -272,6 +259,15 @@ class RuleValidator(
     ) {
         if (options[KONSIST_KSP_LOG_SUCCESS_OPTION] == "true") {
             logger.info("✅ successfully applied rule '$ruleDescription' from ${instance::class.qualifiedName}")
+        }
+    }
+
+    private fun displayValidationOptions() {
+        if (options[KONSIST_KSP_LOG_SUCCESS_OPTION] == "false") {
+            logger.info("Success will not be shown, $KONSIST_KSP_LOG_SUCCESS_OPTION")
+        }
+        if (options[KONSIST_KSP_FAILFAST_OPTION] == "false") {
+            logger.info("Fail fast is off, $KONSIST_KSP_FAILFAST_OPTION")
         }
     }
 }

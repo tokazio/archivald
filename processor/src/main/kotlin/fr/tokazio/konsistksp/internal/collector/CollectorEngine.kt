@@ -9,6 +9,7 @@ import java.nio.file.Paths
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 class CollectorEngine(
@@ -26,14 +27,8 @@ class CollectorEngine(
     fun collect(pathName: String): List<File> {
         files = CopyOnWriteArrayList()
         async(Paths.get(pathName), 0, (Consumer { file: File -> files!!.add(file) }))
-        while (executorService.getActiveCount() > 0) {
-            try {
-                Thread.sleep(250)
-            } catch (e: InterruptedException) {
-                logger.exception(e)
-            }
-        }
         executorService.shutdown()
+        executorService.awaitTermination(5, TimeUnit.MINUTES)
         return files!!
     }
 
@@ -42,14 +37,8 @@ class CollectorEngine(
         consumer: Consumer<File?>,
     ) {
         async(Paths.get(pathName), 0, consumer)
-        while (executorService.getActiveCount() > 0) {
-            try {
-                Thread.sleep(250)
-            } catch (e: InterruptedException) {
-                logger.exception(e)
-            }
-        }
         executorService.shutdown()
+        executorService.awaitTermination(5, TimeUnit.MINUTES)
     }
 
     private fun async(
@@ -75,7 +64,7 @@ class CollectorEngine(
         var c = 0
         for (d in dirFilters) {
             if (!d(path.toString())) {
-                logger.debug("Skipped path (and sub paths) of '" + path + "' (by directory filter #" + c + ")")
+                logger.debug("Skipped path (and sub paths) of '$path' (by directory filter #$c)")
                 return
             }
             c++
@@ -96,7 +85,7 @@ class CollectorEngine(
                         if (shouldHandle) {
                             consumer.accept(entry.toFile())
                         } else {
-                            logger.debug("Skipped file '" + name + "'")
+                            logger.debug("Skipped file '$name'")
                         }
                     }
                 }

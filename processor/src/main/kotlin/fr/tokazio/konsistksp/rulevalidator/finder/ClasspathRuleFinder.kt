@@ -40,8 +40,13 @@ class ClasspathRuleFinder(
         return withRules
             .flatMap { (jarFile, content) ->
                 logger.debug("* $jarFile")
-                content.split("\n").map { line ->
-                    "$jarFile://${line.split("::")[0]}"
+                content.split("\n").mapNotNull { line ->
+                    val className = line.split("::")[0]
+                    if (className.isNotBlank()) {
+                        "$jarFile://$className"
+                    } else {
+                        null // Skip blank lines
+                    }
                 }
             }.filter {
                 it.isNotEmpty()
