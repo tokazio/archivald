@@ -63,6 +63,7 @@ class ControllerRules {
                     )
             }.functions()
             .filter { functionDeclaration ->
+                println(">>>>>${functionDeclaration.fullyQualifiedName}")
                 functionDeclaration.hasPublicOrDefaultModifier
             }.forEach { functionDeclaration ->
                 functionDeclaration.parameters.assertTrue { parameterDeclaration ->

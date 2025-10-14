@@ -22,6 +22,8 @@ class KonsistKspKoFunctionDeclaration(
     KonsistKspKoParameterProvider {
     override val name: String = functionDeclaration.simpleName
 
+    override val fullyQualifiedName: String = functionDeclaration.qualifiedName
+
     override val text: String = "KonsistKspKoFunctionDeclaration?"
 
     override val annotations: List<KoAnnotationDeclaration> by lazy {
@@ -40,10 +42,6 @@ class KonsistKspKoFunctionDeclaration(
 
     override fun hasReturnType(predicate: ((KoTypeDeclaration) -> Boolean)?): Boolean = hasReturnValue
 
-    override fun hasReturnTypeOf(kClass: KClass<*>): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override val numVariables: Int by lazy {
         variables.size
     }
@@ -59,9 +57,6 @@ class KonsistKspKoFunctionDeclaration(
             KoModifier.valueOf(it.name)
         }
     }
-
-    override val isTopLevel: Boolean
-        get() = TODO("Not yet implemented")
 
     override val hasInternalModifier: Boolean by lazy {
         modifiers.contains(KoModifier.INTERNAL)
@@ -166,6 +161,13 @@ class KonsistKspKoFunctionDeclaration(
     // ================================================================================================================
     // ================================================================================================================
 
+    override fun hasReturnTypeOf(kClass: KClass<*>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override val isTopLevel: Boolean
+        get() = TODO("Not yet implemented")
+
     override val hasBlockBody: Boolean
         get() = TODO("Not yet implemented")
 
@@ -173,9 +175,6 @@ class KonsistKspKoFunctionDeclaration(
         get() = TODO("Not yet implemented")
 
     override val containingFile: KoFileDeclaration
-        get() = TODO("Not yet implemented")
-
-    override val fullyQualifiedName: String?
         get() = TODO("Not yet implemented")
 
     override val isInitialized: Boolean
