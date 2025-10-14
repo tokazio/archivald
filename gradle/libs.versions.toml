@@ -1,5 +1,5 @@
 [versions]
-me-version = "0.1.12"
+me-version = "0.1.13"
 jvm-version = "17"
 kotlin-version = "2.2.0"
 #ksp annotation processing https://github.com/google/ksp/releases

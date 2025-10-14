@@ -29,6 +29,7 @@ fun KSDeclarationContainer.extractDeclarations(): Sequence<Declaration> =
                     is KSClassDeclaration -> KonsistKspClassDeclaration(it, it.containingFile!!)
                     is KSFunctionDeclaration -> KonsistKspFunctionDeclaration(it)
                     is KSPropertyDeclaration -> KonsistKspPropertyDeclaration(it)
+                    is KSTypeAlias -> KonsistKspTypeAliasDeclaration(it)
                     else -> throw IllegalStateException(
                         "Unhandled ${declarationContainer::class.java.simpleName}.declarations ${it::class.java.simpleName} $it",
                     )

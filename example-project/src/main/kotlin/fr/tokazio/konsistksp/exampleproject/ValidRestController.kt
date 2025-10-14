@@ -3,6 +3,8 @@ package fr.tokazio.konsistksp.exampleproject
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RestController
 
+typealias AnyTypeAlias = String
+
 @RestController
 @Validated
 class ValidRestController {
