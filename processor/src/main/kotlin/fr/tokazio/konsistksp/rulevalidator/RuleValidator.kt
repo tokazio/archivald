@@ -184,7 +184,7 @@ class RuleValidator(
             when (it) {
                 is KonsistKspKoClassDeclaration ->
                     logFailureWithError(
-                        "'$failureMessage' failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
+                        "'$failureMessage' on class ${it.name}  failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
                         it.classDeclaration.containingFile,
                     )
 
@@ -196,7 +196,7 @@ class RuleValidator(
 
                 is KonsistKspKoPackageDeclaration ->
                     logFailureWithError(
-                        "'$failureMessage' failed at file://${it.path}:1",
+                        "'$failureMessage' on package ${it.name}  failed at file://${it.path}:1",
                         it.classDeclaration,
                     )
 
@@ -208,21 +208,21 @@ class RuleValidator(
 
                 is KonsistKspKoObjectDeclaration -> {
                     logFailureWithError(
-                        "'$failureMessage' failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
+                        "'$failureMessage' on object ${it.name}  failed at file://${it.location}:${it.classDeclaration.location.lineNumber}",
                         it.classDeclaration,
                     )
                 }
 
                 is KonsistKspKoPropertyDeclaration -> {
                     logFailureWithError(
-                        "'$failureMessage' failed at file://${it.location}:${it.propertyDeclaration.location.lineNumber}",
+                        "'$failureMessage' on property ${it.name}  failed at file://${it.location}:${it.propertyDeclaration.location.lineNumber}",
                         it.propertyDeclaration,
                     )
                 }
 
                 is KonsistKspKoParameterDeclaration -> {
                     logFailureWithError(
-                        "'$failureMessage' failed at file://${it.location}:${it.valueParameter.location.lineNumber}",
+                        "'$failureMessage' on parameter ${it.name} failed at file://${it.location}:${it.valueParameter.location.lineNumber}",
                         it.valueParameter,
                     )
                 }
