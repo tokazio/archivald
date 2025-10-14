@@ -1,44 +1,39 @@
 package fr.tokazio.konsistksp.ksp.bridge.model
 
-import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import fr.tokazio.konsistksp.internal.model.*
 import fr.tokazio.konsistksp.internal.model.Annotation
-import fr.tokazio.konsistksp.internal.model.Declaration
-import fr.tokazio.konsistksp.internal.model.File
-import fr.tokazio.konsistksp.internal.model.Node
 
 class KonsistKspFile(
     internal val inner: KSFile,
 ) : File {
-    override val parent: Node?
-        get() = inner.parent?.let { KonsistKspNode(it) }
-
-    override val packageName: String by lazy {
-        inner.packageName.asString()
-    }
-
-    override val filePath: String by lazy {
-        inner.filePath
-    }
-
     override val fileName: String = inner.fileName
 
+    override val simpleName: String = inner.fileName
+
+    override val qualifiedName: String = "${inner.packageName}.$fileName"
+
+    override val parent: Node? by lazy {
+        inner.parent?.let { KonsistKspNode(it) }
+    }
+
+    override val location: Location by lazy { KonsistKspLocation(inner.location as FileLocation) }
+
+    override val packageName: String = inner.packageName.asString()
+
+    override val containingFile: File by lazy {
+        KonsistKspFile(inner)
+    }
+
+    override val filePath: String = inner.filePath
+
     override val declarations: Sequence<Declaration> by lazy {
-        inner.declarations
-            .mapNotNull {
-                when (it) {
-                    is KSClassDeclaration -> KonsistKspClassDeclaration(it, inner)
-                    is KSFunctionDeclaration -> KonsistKspFunctionDeclaration(it)
-                    else -> null
-                }
-            }
+        inner.extractDeclarations()
     }
 
     override val annotations: Sequence<Annotation> by lazy {
-        inner.annotations.map {
-            KonsistKspAnnotation(it)
-        }
+        inner.extractAnnotations()
     }
 
     override fun toString(): String = inner.toString()

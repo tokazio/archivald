@@ -1,22 +1,28 @@
 package fr.tokazio.konsistksp.ksp.bridge.model
 
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.FileLocation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFile
 import fr.tokazio.konsistksp.internal.model.*
 import fr.tokazio.konsistksp.internal.model.Annotation
-import fr.tokazio.konsistksp.internal.model.Modifier
 
 class KonsistKspClassDeclaration(
     internal val inner: KSClassDeclaration,
     internal val file: KSFile,
 ) : ClassDeclaration {
-    override val parent: Node?
-        get() = inner.parent?.let { KonsistKspNode(it) }
+    override val parent: Node? by lazy {
+        inner.parent?.let { KonsistKspNode(it) }
+    }
 
-    override val location = inner.location as FileLocation
+    override val location: Location by lazy {
+        KonsistKspLocation(inner.location as FileLocation)
+    }
+    override val simpleName: String = inner.simpleName.asString()
 
-    override val qualifiedName: String = inner.qualifiedName!!.asString()
+    override val qualifiedName: String = inner.qualifiedName?.asString() ?: inner.notInClassPath()
 
-    override val packageName: String = qualifiedName.substringBeforeLast(".")
+    override val packageName: String = inner.packageName.asString()
 
     override val isCompanionObject: Boolean = inner.isCompanionObject
 
@@ -31,37 +37,23 @@ class KonsistKspClassDeclaration(
     override val isAnnotation: Boolean = inner.classKind == ClassKind.ANNOTATION_CLASS
 
     override val modifiers: Set<Modifier> by lazy {
-        val mods = mutableSetOf<Modifier>()
         if (inner.isCompanionObject) {
-            mods.add(Modifier.COMPANION)
+            inner.extractModifiers() + Modifier.COMPANION
+        } else {
+            inner.extractModifiers()
         }
-        inner.modifiers.forEach {
-            modifiers
-            mods.add(Modifier.valueOf(it.name))
-        }
-        mods
     }
 
-    override val containingFile: File = KonsistKspFile(file)
+    override val containingFile: File by lazy {
+        KonsistKspFile(file)
+    }
 
-    override val annotations: Sequence<Annotation>
-        get() =
-            inner.annotations.map {
-                KonsistKspAnnotation(it)
-            }
+    override val annotations: Sequence<Annotation> by lazy {
+        inner.extractAnnotations()
+    }
 
     override val declarations: Sequence<Declaration> by lazy {
-        inner.declarations
-            .sortedBy {
-                (it.location as FileLocation).lineNumber
-            }.map {
-                when (it) {
-                    is KSClassDeclaration -> KonsistKspClassDeclaration(it, inner.containingFile!!)
-                    is KSFunctionDeclaration -> KonsistKspFunctionDeclaration(it)
-                    is KSPropertyDeclaration -> KonsistKspPropertyDeclaration(it)
-                    else -> throw IllegalStateException("Unhandled class declaration ${it::class.java.simpleName} $it")
-                }
-            }
+        inner.extractDeclarations()
     }
 
     override fun toString(): String = inner.toString()

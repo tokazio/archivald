@@ -17,21 +17,30 @@ class StyleRules {
             .scopeFromPackage("$packageName..")
             .classes()
             .filter { it.sourceSetName == "main" }
-            .assertTrue {
+            .forEach {
                 val lastKoPropertyDeclarationIndex =
                     it
                         .declarations(includeNested = false, includeLocal = false)
                         .indexOfLastInstance<KoPropertyDeclaration>()
+
+                val lastKoProperty =
+                    if (lastKoPropertyDeclarationIndex >= 0) {
+                        it.declarations(false, false)[lastKoPropertyDeclarationIndex]
+                    } else {
+                        null
+                    }
 
                 val firstKoFunctionDeclarationIndex =
                     it
                         .declarations(includeNested = false, includeLocal = false)
                         .indexOfFirstInstance<KoFunctionDeclaration>()
 
-                if (lastKoPropertyDeclarationIndex != -1 && firstKoFunctionDeclarationIndex != -1) {
-                    lastKoPropertyDeclarationIndex < firstKoFunctionDeclarationIndex
-                } else {
-                    true
+                lastKoProperty.assertTrue {
+                    if (lastKoPropertyDeclarationIndex != -1 && firstKoFunctionDeclarationIndex != -1) {
+                        lastKoPropertyDeclarationIndex < firstKoFunctionDeclarationIndex
+                    } else {
+                        true
+                    }
                 }
             }
     }

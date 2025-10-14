@@ -33,11 +33,8 @@ class KonsistKspKoParameterDeclaration(
 
     override val numAnnotations: Int by lazy { annotations.size }
 
-    override val modifiers: List<KoModifier> by lazy {
-        valueParameter.modifiers.map {
-            KoModifier.valueOf(it.name)
-        }
-    }
+    // No modifiers on function parameters
+    override val modifiers: List<KoModifier> = emptyList()
 
     override val containingDeclaration: KoBaseDeclaration =
         when (valueParameter.containingDeclaration) {

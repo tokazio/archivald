@@ -62,7 +62,9 @@ class ControllerRules {
                         "org.springframework.web.bind.annotation.RestController",
                     )
             }.functions()
-            .forEach { functionDeclaration ->
+            .filter { functionDeclaration ->
+                functionDeclaration.hasPublicOrDefaultModifier
+            }.forEach { functionDeclaration ->
                 functionDeclaration.parameters.assertTrue { parameterDeclaration ->
                     parameterDeclaration.annotations
                         .map { it.fullyQualifiedName }

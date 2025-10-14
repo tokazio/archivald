@@ -7,6 +7,7 @@ import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
 import fr.tokazio.konsistksp.konsist.provider.*
+import java.util.*
 import kotlin.reflect.KClass
 
 class KonsistKspKoFunctionDeclaration(
@@ -19,7 +20,7 @@ class KonsistKspKoFunctionDeclaration(
     KonsistKspKoModifierProvider,
     KonsistKspKoReturnProvider,
     KonsistKspKoParameterProvider {
-    override val name: String = functionDeclaration.name
+    override val name: String = functionDeclaration.simpleName
 
     override val text: String = "KonsistKspKoFunctionDeclaration?"
 
@@ -57,6 +58,81 @@ class KonsistKspKoFunctionDeclaration(
         functionDeclaration.modifiers.map {
             KoModifier.valueOf(it.name)
         }
+    }
+
+    override val isTopLevel: Boolean
+        get() = TODO("Not yet implemented")
+
+    override val hasInternalModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.INTERNAL)
+    }
+
+    override val hasPrivateModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.PRIVATE)
+    }
+
+    override val hasProtectedModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.PROTECTED)
+    }
+
+    override val hasPublicModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.PUBLIC)
+    }
+
+    override val hasPublicOrDefaultModifier: Boolean by lazy {
+        modifiers.none {
+            EnumSet
+                .of(KoModifier.PRIVATE, KoModifier.PROTECTED, KoModifier.INTERNAL)
+                .contains(it)
+        }
+    }
+
+    override val hasOperatorModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.OPERATOR)
+    }
+
+    override val hasInlineModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.INLINE)
+    }
+
+    override val hasTailrecModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.TAILREC)
+    }
+
+    override val hasInfixModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.INFIX)
+    }
+
+    override val hasExternalModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.INLINE)
+    }
+
+    override val hasSuspendModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.SUSPEND)
+    }
+
+    override val hasOpenModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.OPEN)
+    }
+
+    override val hasOverrideModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.OVERRIDE)
+    }
+
+    override val hasFinalModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.FINAL)
+    }
+
+    override val hasAbstractModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.ABSTRACT)
+    }
+
+    override val hasActualModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.ACTUAL)
+    }
+
+    override val hasExpectModifier: Boolean by lazy {
+        modifiers.contains(KoModifier.EXPECT)
     }
 
     override val containingDeclaration: KoBaseDeclaration =
@@ -308,50 +384,9 @@ class KonsistKspKoFunctionDeclaration(
         TODO("Not yet implemented")
     }
 
-    override val isTopLevel: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasInternalModifier: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasPrivateModifier: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasProtectedModifier: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasPublicModifier: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasPublicOrDefaultModifier: Boolean
-        get() = TODO("Not yet implemented")
-
-    override val hasOperatorModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasInlineModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasTailrecModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasInfixModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasExternalModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasSuspendModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasOpenModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasOverrideModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasFinalModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasAbstractModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasActualModifier: Boolean
-        get() = TODO("Not yet implemented")
-    override val hasExpectModifier: Boolean
-        get() = TODO("Not yet implemented")
     override val numTypeParameters: Int
         get() = TODO("Not yet implemented")
+
     override val typeParameters: List<KoTypeParameterDeclaration>
         get() = TODO("Not yet implemented")
 
