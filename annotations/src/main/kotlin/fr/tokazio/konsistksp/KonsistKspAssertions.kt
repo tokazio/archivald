@@ -36,6 +36,15 @@ fun <E : KoBaseProvider> List<E?>.assertFalse(
     assertKsp(strict, additionalMessage, testName, function, positiveCheck = false)
 }
 
+fun <E : KoBaseProvider> E?.assertFalse(
+    strict: Boolean = false,
+    additionalMessage: String? = null,
+    testName: String? = null,
+    function: (E) -> Boolean?,
+) {
+    listOf(this).assertKsp(strict, additionalMessage, testName, function, positiveCheck = false)
+}
+
 private fun <E : KoBaseProvider> List<E?>.assertKsp(
     strict: Boolean,
     additionalMessage: String?,

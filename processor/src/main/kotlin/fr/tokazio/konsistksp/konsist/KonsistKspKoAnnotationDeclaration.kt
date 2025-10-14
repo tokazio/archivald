@@ -18,6 +18,11 @@ class KonsistKspKoAnnotationDeclaration(
 
     override val name: String = annotation.name
 
+    override fun representsType(name: String?): Boolean =
+        name?.let {
+            this.name == name || this.fullyQualifiedName == name
+        } ?: false
+
     override val text: String = "KonsistKspKoAnnotationDeclaration?"
 
     override fun toString(): String = annotation.toString()
@@ -90,10 +95,6 @@ class KonsistKspKoAnnotationDeclaration(
     }
 
     override fun hasArgumentsWithAllNames(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun representsType(name: String?): Boolean {
         TODO("Not yet implemented")
     }
 

@@ -4,6 +4,7 @@ import com.lemonappdev.konsist.api.KoModifier
 import com.lemonappdev.konsist.api.declaration.*
 import com.lemonappdev.konsist.api.declaration.type.KoTypeDeclaration
 import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.PropertyDeclaration
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoAnnotationProvider
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoModifierProvider
@@ -23,12 +24,27 @@ class KonsistKspKoPropertyDeclaration(
 
     override val text: String = "KonsistKspKoPropertyDeclaration?"
 
+    override val location: String = propertyDeclaration.location.asString()
+
     override val annotations: List<KoAnnotationDeclaration> by lazy {
         propertyDeclaration.annotations
             .map {
                 KonsistKspKoAnnotationDeclaration(logger, it)
             }.toList()
     }
+
+    override val containingDeclaration: KoBaseDeclaration =
+        when (propertyDeclaration.containingDeclaration) {
+            is ClassDeclaration ->
+                KonsistKspKoClassDeclaration(
+                    logger,
+                    propertyDeclaration.containingDeclaration as ClassDeclaration,
+                )
+
+            else -> throw IllegalStateException(
+                "Unhandled koProperty containingDeclaration ${propertyDeclaration.containingDeclaration::class.java.simpleName}",
+            )
+        }
 
     override val numAnnotations: Int = annotations.size
 
@@ -78,14 +94,10 @@ class KonsistKspKoPropertyDeclaration(
         get() = TODO("Not yet implemented")
     override val kDoc: KoKDocDeclaration?
         get() = TODO("Not yet implemented")
-    override val location: String
-        get() = TODO("Not yet implemented")
     override val locationWithText: String
         get() = TODO("Not yet implemented")
 
     override val packagee: KoPackageDeclaration?
-        get() = TODO("Not yet implemented")
-    override val containingDeclaration: KoBaseDeclaration
         get() = TODO("Not yet implemented")
 
     override fun resideInPath(

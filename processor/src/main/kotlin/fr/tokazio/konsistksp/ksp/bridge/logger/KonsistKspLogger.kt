@@ -3,9 +3,7 @@ package fr.tokazio.konsistksp.ksp.bridge.logger
 import com.google.devtools.ksp.processing.KSPLogger
 import fr.tokazio.konsistksp.internal.logger.Logger
 import fr.tokazio.konsistksp.internal.model.Node
-import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspClassDeclaration
-import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspFile
-import fr.tokazio.konsistksp.ksp.bridge.model.KonsistKspNode
+import fr.tokazio.konsistksp.ksp.bridge.model.*
 
 private const val PREFIX = "Konsist-ksp"
 
@@ -54,6 +52,8 @@ private fun Node?.asKSNodeOrNull() =
             is KonsistKspNode -> it.inner
             is KonsistKspFile -> it.inner
             is KonsistKspClassDeclaration -> it.inner
+            is KonsistKspPropertyDeclaration -> it.inner
+            is KonsistKspFunctionDeclaration -> it.inner
             else -> throw UnsupportedOperationException("Can't log a non KSNode ${it::class.java.simpleName} $it")
         }
     }

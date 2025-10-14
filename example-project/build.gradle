@@ -29,6 +29,9 @@ dependencies {
     testImplementation 'org.springframework:spring-web:7.0.0-M9'
     implementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
     testImplementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
+    implementation 'javax.inject:javax.inject:1'
+    testImplementation 'javax.inject:javax.inject:1'
+
 
     // As a testImplementation to use the src/rules
     testImplementation "fr.tokazio.konsistksp:konsistksp-annotations:${libs.versions.me.version.get()}"

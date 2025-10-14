@@ -13,6 +13,7 @@ import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
 import fr.tokazio.konsistksp.internal.model.PropertyDeclaration
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoAnnotationProvider
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoNameProvider
+import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoPropertyProvider
 import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoTextProvider
 import kotlin.reflect.KClass
 
@@ -23,7 +24,8 @@ class KonsistKspKoClassDeclaration(
     KoClassDeclaration,
     KonsistKspKoAnnotationProvider,
     KonsistKspKoNameProvider,
-    KonsistKspKoTextProvider {
+    KonsistKspKoTextProvider,
+    KonsistKspKoPropertyProvider {
     override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, classDeclaration)
 
     override val fullyQualifiedName: String = classDeclaration.qualifiedName
@@ -73,6 +75,13 @@ class KonsistKspKoClassDeclaration(
                 it.isObject || it.isCompanionObject
             }.map {
                 KonsistKspKoObjectDeclaration(logger, it)
+            }.toList()
+
+    override fun properties(includeNested: Boolean): List<KoPropertyDeclaration> =
+        classDeclaration.declarations
+            .filterIsInstance<PropertyDeclaration>()
+            .map {
+                KonsistKspKoPropertyDeclaration(logger, it)
             }.toList()
 
     override val sourceSetName: String
@@ -1092,67 +1101,6 @@ class KonsistKspKoClassDeclaration(
 
     override val projectPath: String
         get() = TODO("Not yet implemented")
-
-    override fun countProperties(
-        includeNested: Boolean,
-        predicate: (KoPropertyDeclaration) -> Boolean,
-    ): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasAllProperties(
-        includeNested: Boolean,
-        predicate: (KoPropertyDeclaration) -> Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasProperties(includeNested: Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPropertiesWithAllNames(
-        name: String,
-        vararg names: String,
-        includeNested: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPropertiesWithAllNames(
-        names: Collection<String>,
-        includeNested: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasProperty(
-        includeNested: Boolean,
-        predicate: (KoPropertyDeclaration) -> Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPropertyWithName(
-        name: String,
-        vararg names: String,
-        includeNested: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPropertyWithName(
-        names: Collection<String>,
-        includeNested: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun numProperties(includeNested: Boolean): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun properties(includeNested: Boolean): List<KoPropertyDeclaration> = emptyList() // TODO
 
     override fun representsType(name: String?): Boolean {
         TODO("Not yet implemented")

@@ -213,6 +213,13 @@ class RuleValidator(
                     )
                 }
 
+                is KonsistKspKoPropertyDeclaration -> {
+                    logFailureWithError(
+                        "'$failureMessage' failed at file://${it.location}:${it.propertyDeclaration.location.lineNumber}",
+                        it.propertyDeclaration,
+                    )
+                }
+
                 else ->
                     logFailureWithError(
                         "Validation error unknown: ${it::class.java}, you should handle it in ${this::class.java.simpleName}.handleAssertionException",

@@ -6,9 +6,6 @@ import com.lemonappdev.konsist.api.declaration.KoPropertyDeclaration
 import com.lemonappdev.konsist.api.ext.list.indexOfFirstInstance
 import com.lemonappdev.konsist.api.ext.list.indexOfLastInstance
 import com.lemonappdev.konsist.api.ext.list.properties
-import com.lemonappdev.konsist.api.ext.provider.hasAnnotationOf
-import org.springframework.beans.factory.annotation.Autowired
-import javax.inject.Inject
 
 class StyleRules {
     @ArchitectureRule("Declare properties before function", uuid = "ghXnRF")
@@ -71,8 +68,8 @@ class StyleRules {
             .assertFalse { it.text.isEmpty() }
     }
 
-    @ArchitectureRule("No field injection", uuid = "QUKZwX")
-    fun noClassShouldUseFieldInjection(
+    @ArchitectureRule("No @Inject field injection", uuid = "QUKZwX")
+    fun noClassShouldUseInjectedField(
         koScopeCreator: KonsistKspScopeCreator,
         packageName: String,
     ) {
@@ -82,8 +79,28 @@ class StyleRules {
             .filter {
                 it.sourceSetName == "main"
             }.properties()
-            .assertFalse {
-                it.hasAnnotationOf<Inject>() || it.hasAnnotationOf<Autowired>()
+            .forEach { propertyDeclaration ->
+                propertyDeclaration.assertFalse {
+                    it.hasAnnotationWithName("javax.inject.Inject")
+                }
+            }
+    }
+
+    @ArchitectureRule("No @Autowired field injection", uuid = "PaltsF")
+    fun noClassShouldUseAutowiredField(
+        koScopeCreator: KonsistKspScopeCreator,
+        packageName: String,
+    ) {
+        koScopeCreator
+            .scopeFromPackage("$packageName..")
+            .classes()
+            .filter {
+                it.sourceSetName == "main"
+            }.properties()
+            .forEach { propertyDeclaration ->
+                propertyDeclaration.assertFalse {
+                    it.hasAnnotationWithName("org.springframework.beans.factory.annotation.Autowired")
+                }
             }
     }
 
