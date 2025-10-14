@@ -54,6 +54,7 @@ private fun Node?.asKSNodeOrNull() =
             is KonsistKspClassDeclaration -> it.inner
             is KonsistKspPropertyDeclaration -> it.inner
             is KonsistKspFunctionDeclaration -> it.inner
+            is KonsistKspValueParameter -> it.inner
             else -> throw UnsupportedOperationException("Can't log a non KSNode ${it::class.java.simpleName} $it")
         }
     }

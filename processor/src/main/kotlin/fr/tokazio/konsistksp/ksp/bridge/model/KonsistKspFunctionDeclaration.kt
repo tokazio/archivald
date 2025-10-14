@@ -26,6 +26,19 @@ class KonsistKspFunctionDeclaration(
             }.toList()
     }
 
+    override val containingDeclaration: Declaration =
+        when (inner.parent) {
+            is KSClassDeclaration ->
+                KonsistKspClassDeclaration(
+                    inner.parent as KSClassDeclaration,
+                    inner.containingFile!!,
+                )
+
+            else -> throw IllegalStateException(
+                "Unhandled function containingDeclaration ${if (inner.parent != null) inner.parent!!::class.java.simpleName else "null"} ",
+            )
+        }
+
     override val annotations: Sequence<Annotation> by lazy {
         inner.annotations.map {
             KonsistKspAnnotation(it)

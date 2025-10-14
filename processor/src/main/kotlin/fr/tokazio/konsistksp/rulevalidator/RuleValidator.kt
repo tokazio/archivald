@@ -220,6 +220,13 @@ class RuleValidator(
                     )
                 }
 
+                is KonsistKspKoParameterDeclaration -> {
+                    logFailureWithError(
+                        "'$failureMessage' failed at file://${it.location}:${it.valueParameter.location.lineNumber}",
+                        it.valueParameter,
+                    )
+                }
+
                 else ->
                     logFailureWithError(
                         "Validation error unknown: ${it::class.java}, you should handle it in ${this::class.java.simpleName}.handleAssertionException",

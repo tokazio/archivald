@@ -5,4 +5,5 @@ interface FunctionDeclaration : Declaration {
     val modifiers: List<Modifier>
     val parameters: List<ValueParameter>
     val returnType: TypeReference?
+    val containingDeclaration: Declaration
 }

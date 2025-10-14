@@ -5,4 +5,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Validated
-class ValidRestController
+class ValidRestController {
+    fun anyFun(param1: String) {
+        // do nothing
+    }
+}

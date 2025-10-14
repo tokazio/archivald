@@ -4,6 +4,7 @@ import com.lemonappdev.konsist.api.KoModifier
 import com.lemonappdev.konsist.api.declaration.*
 import com.lemonappdev.konsist.api.declaration.type.KoTypeDeclaration
 import fr.tokazio.konsistksp.internal.logger.Logger
+import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
 import fr.tokazio.konsistksp.konsist.provider.*
 import kotlin.reflect.KClass
@@ -16,7 +17,8 @@ class KonsistKspKoFunctionDeclaration(
     KonsistKspKoTextProvider,
     KonsistKspKoAnnotationProvider,
     KonsistKspKoModifierProvider,
-    KonsistKspKoReturnProvider {
+    KonsistKspKoReturnProvider,
+    KonsistKspKoParameterProvider {
     override val name: String = functionDeclaration.name
 
     override val text: String = "KonsistKspKoFunctionDeclaration?"
@@ -28,7 +30,7 @@ class KonsistKspKoFunctionDeclaration(
             }.toList()
     }
 
-    override val numAnnotations: Int = annotations.size
+    override val numAnnotations: Int by lazy { annotations.size }
 
     override val returnType: KoTypeDeclaration? =
         functionDeclaration.returnType?.let { KonsistKspKoTypeDeclaration(logger, it) }
@@ -57,7 +59,28 @@ class KonsistKspKoFunctionDeclaration(
         }
     }
 
-    override val numModifiers: Int = modifiers.size
+    override val containingDeclaration: KoBaseDeclaration =
+        when (functionDeclaration.containingDeclaration) {
+            is ClassDeclaration ->
+                KonsistKspKoClassDeclaration(
+                    logger,
+                    functionDeclaration.containingDeclaration as ClassDeclaration,
+                )
+
+            else -> throw IllegalStateException(
+                "Unhandled koFunction containingDeclaration ${functionDeclaration.containingDeclaration::class.java.simpleName}",
+            )
+        }
+
+    override val numModifiers: Int by lazy { modifiers.size }
+
+    override val numParameters: Int by lazy { parameters.size }
+
+    override val parameters: List<KoParameterDeclaration> by lazy {
+        functionDeclaration.parameters.map {
+            KonsistKspKoParameterDeclaration(logger, it)
+        }
+    }
 
     override fun toString(): String = functionDeclaration.toString()
 
@@ -237,53 +260,6 @@ class KonsistKspKoFunctionDeclaration(
         get() = TODO("Not yet implemented")
 
     override val packagee: KoPackageDeclaration?
-        get() = TODO("Not yet implemented")
-
-    override val numParameters: Int
-        get() = TODO("Not yet implemented")
-
-    override val parameters: List<KoParameterDeclaration>
-        get() = TODO("Not yet implemented")
-
-    override fun countParameters(predicate: (KoParameterDeclaration) -> Boolean): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasAllParameters(predicate: (KoParameterDeclaration) -> Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParameter(predicate: (KoParameterDeclaration) -> Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParameterWithName(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParameterWithName(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParameters(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParametersWithAllNames(
-        name: String,
-        vararg names: String,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasParametersWithAllNames(names: Collection<String>): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override val containingDeclaration: KoBaseDeclaration
         get() = TODO("Not yet implemented")
 
     override val path: String

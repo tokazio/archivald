@@ -11,10 +11,7 @@ import fr.tokazio.konsistksp.internal.model.ClassDeclaration
 import fr.tokazio.konsistksp.internal.model.File
 import fr.tokazio.konsistksp.internal.model.FunctionDeclaration
 import fr.tokazio.konsistksp.internal.model.PropertyDeclaration
-import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoAnnotationProvider
-import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoNameProvider
-import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoPropertyProvider
-import fr.tokazio.konsistksp.konsist.provider.KonsistKspKoTextProvider
+import fr.tokazio.konsistksp.konsist.provider.*
 import kotlin.reflect.KClass
 
 class KonsistKspKoClassDeclaration(
@@ -25,7 +22,8 @@ class KonsistKspKoClassDeclaration(
     KonsistKspKoAnnotationProvider,
     KonsistKspKoNameProvider,
     KonsistKspKoTextProvider,
-    KonsistKspKoPropertyProvider {
+    KonsistKspKoPropertyProvider,
+    KonsistKspKoFunctionProvider {
     override val packagee: KoPackageDeclaration = KonsistKspKoPackageDeclaration(logger, classDeclaration)
 
     override val fullyQualifiedName: String = classDeclaration.qualifiedName
@@ -43,11 +41,11 @@ class KonsistKspKoClassDeclaration(
         annotations.size
     }
 
-    override val containingDeclaration: KoBaseDeclaration
-        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
+    override val containingDeclaration: KoBaseDeclaration =
+        KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
 
-    override val containingFile: KoFileDeclaration
-        get() = KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
+    override val containingFile: KoFileDeclaration =
+        KonsistKspKoFileDeclaration(logger, classDeclaration.containingFile)
 
     override val text: String = "KonsistKspKoClassDeclaration?"
 
@@ -82,6 +80,16 @@ class KonsistKspKoClassDeclaration(
             .filterIsInstance<PropertyDeclaration>()
             .map {
                 KonsistKspKoPropertyDeclaration(logger, it)
+            }.toList()
+
+    override fun functions(
+        includeNested: Boolean,
+        includeLocal: Boolean,
+    ): List<KoFunctionDeclaration> =
+        classDeclaration.declarations
+            .filterIsInstance<FunctionDeclaration>()
+            .map {
+                KonsistKspKoFunctionDeclaration(logger, it)
             }.toList()
 
     override val sourceSetName: String
@@ -651,85 +659,6 @@ class KonsistKspKoClassDeclaration(
     }
 
     override fun numExternalParents(indirectParents: Boolean): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun countFunctions(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-        predicate: (KoFunctionDeclaration) -> Boolean,
-    ): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun functions(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): List<KoFunctionDeclaration> {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasAllFunctions(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-        predicate: (KoFunctionDeclaration) -> Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunction(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-        predicate: (KoFunctionDeclaration) -> Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunctionWithName(
-        name: String,
-        vararg names: String,
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunctionWithName(
-        names: Collection<String>,
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunctions(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunctionsWithAllNames(
-        name: String,
-        vararg names: String,
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasFunctionsWithAllNames(
-        names: Collection<String>,
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun numFunctions(
-        includeNested: Boolean,
-        includeLocal: Boolean,
-    ): Int {
         TODO("Not yet implemented")
     }
 
