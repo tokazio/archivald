@@ -25,30 +25,42 @@ buildCache {
         directory = "${settingsDir}/.gradle/caches/build-cache-1"
         println("local build cache at ${directory}")
     }
-    /*
-    remote(HttpBuildCache) {
-        push = true
-        allowInsecureProtocol = true
-        url = providers.environmentVariable("CI_GRADLE_REMOTE_CACHE_URL").getOrElse('http://gradle-remote-cache.defaultadm.whoz.lan/cache/')
-        credentials {
-            username = providers.environmentVariable("CI_GRADLE_REMOTE_CACHE_USERNAME").getOrNull()
-            password = providers.environmentVariable("CI_GRADLE_REMOTE_CACHE_PASSWORD").getOrNull()
-        }
-    }
-     */
 }
 
-rootProject.name = 'konsistksp'
+rootProject.name = 'archivald'
 
 includeBuild('annotations') {
-    name = "konsistksp-annotations"
+    name = "annotations"
 }
-includeBuild('processor') {
-    name = "konsistksp-processor"
+// Archivald konsist api
+includeBuild('konsist') {
+    name = "konsist"
 }
+// Archivald archunit api
+includeBuild('archunit') {
+    name = "archunit"
+}
+includeBuild('internal-processor') {
+    name = "internal-processor"
+}
+// Archivald ksp processor (konsist and archunit)
+includeBuild('ksp-processor') {
+    name = "ksp-processor"
+}
+// Archivald java annotation processor (konsist and archunit)
+includeBuild('jap-processor') {
+    name = "jap-processor"
+}
+includeBuild('konsist-processor') {
+    name = "konsist-processor"
+}
+includeBuild('archunit-processor') {
+    name = "archunit-processor"
+}
+// Archivald standard rules (konsist and archunit)
 includeBuild('standard-rules') {
-    name = "konsistksp-standard-rules"
+    name = "standard-rules"
 }
-includeBuild('example-project') {
-    name = "konsistksp-example-project"
+includeBuild('konsist-ksp-example-project') {
+    name = "konsist-ksp-example-project"
 }

@@ -1,0 +1,38 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    id 'maven-publish'
+}
+
+group = 'fr.tokazio.archivald'
+version = "${libs.versions.me.version.get()}"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api "fr.tokazio.archivald:annotations"
+    compileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = 'https://maven.pkg.github.com/tokazio/archivald'
+            credentials {
+                username = System.getenv("PACKAGE_USER")
+                password = System.getenv("PACKAGE_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}

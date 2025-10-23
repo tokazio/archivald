@@ -6,7 +6,7 @@ tasks.register("clean") {
 tasks.register("build") {
     group = "build"
     dependsOn(
-            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+            ['konsist', 'archunit', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
                 gradle.includedBuild(it).task(':build')
             }
     )
@@ -15,7 +15,7 @@ tasks.register("build") {
 tasks.register("jar") {
     group = "build"
     dependsOn(
-            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+            ['konsist', 'archunit', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
                 gradle.includedBuild(it).task(':jar')
             }
     )
@@ -24,7 +24,7 @@ tasks.register("jar") {
 tasks.register("publish") {
     group = "publishing"
     dependsOn(
-            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+            ['konsist', 'archunit', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
                 gradle.includedBuild(it).task(':publish')
             }
     )
@@ -33,7 +33,7 @@ tasks.register("publish") {
 tasks.register("publishToMavenLocal") {
     group = "publishing"
     dependsOn(
-            ['konsistksp-annotations', 'konsistksp-processor', 'konsistksp-standard-rules'].collect {
+            ['konsist', 'archunit', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
                 gradle.includedBuild(it).task(':publishToMavenLocal')
             }
     )

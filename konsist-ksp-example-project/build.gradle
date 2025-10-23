@@ -1,0 +1,60 @@
+plugins {
+    alias libs.plugins.kotlin.jvm
+    alias libs.plugins.ksp
+}
+
+group = 'fr.tokazio.archivald'
+version = 'undefined'
+
+jar {
+    enabled = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+// To compile src/rules independently of the main compilation
+// compilation here is not mandatory but it allow to see compilation errors
+// before the konsist ksp dynamic compilation step
+sourceSets.test.java.srcDirs += ['src/rules']
+
+dependencies {
+    // Validate the @ArchitectureRule
+    ksp "fr.tokazio.archivald:ksp-processor:${libs.versions.me.version.get()}"
+
+
+    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+    testImplementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+
+    implementation 'org.springframework:spring-web:7.0.0-M9'
+    testImplementation 'org.springframework:spring-web:7.0.0-M9'
+    implementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
+    testImplementation 'org.springframework.boot:spring-boot-validation:4.0.0-M3'
+    implementation 'javax.inject:javax.inject:1'
+    testImplementation 'javax.inject:javax.inject:1'
+
+
+    // As a testImplementation to use the src/rules
+    testImplementation "fr.tokazio.archivald:konsist:${libs.versions.me.version.get()}"
+    // Use standard-rules
+    testImplementation "fr.tokazio.archivald:standard-rules:${libs.versions.me.version.get()}"
+
+    testImplementation "io.kotest:kotest-runner-junit5-jvm:${libs.versions.kotest.version.get()}"
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
+}
+
+ksp {
+    arg("archivaldProjectBase", projectDir.absolutePath)
+    arg("archivaldClasspath", configurations.testCompileClasspath.asPath) // testCompileClasspath to use src/rules
+    arg("archivaldDebug", "true")
+    arg("archivaldFailFast", "false") // true to fail the build at the first rule failure
+    arg("archivaldIgnoreFailures", "false") // true to not fail the build
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'fr.tokazio.konsistksp'
+group = 'fr.tokazio.archivald'
 version = "${libs.versions.me.version.get()}"
 
 repositories {
@@ -12,14 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation "fr.tokazio.konsistksp:konsistksp-annotations"
+    compileOnly "fr.tokazio.archivald:konsist"
     // Generate META-INF/architecture-rules with @ArchitectureRule
-    ksp "fr.tokazio.konsistksp:konsistksp-processor"
+    ksp "fr.tokazio.archivald:ksp-processor"
 
-    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+    compileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 
-    implementation 'javax.inject:javax.inject:1'
-    implementation 'org.springframework:spring-beans:5.3.31'
+    compileOnly 'javax.inject:javax.inject:1'
+    compileOnly 'org.springframework:spring-beans:5.3.31'
 }
 
 kotlin {
@@ -27,15 +27,15 @@ kotlin {
 }
 
 ksp {
-    arg("konsistKspProjectBase", projectDir.absolutePath)
-    arg("konsistKspDebug", "true")
+    arg("archivaldProjectBase", projectDir.absolutePath)
+    arg("archivaldDebug", "true")
 }
 
 publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = 'https://maven.pkg.github.com/tokazio/konsist-ksp'
+            url = 'https://maven.pkg.github.com/tokazio/archivald'
             credentials {
                 username = System.getenv("PACKAGE_USER")
                 password = System.getenv("PACKAGE_TOKEN")

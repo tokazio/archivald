@@ -1,0 +1,25 @@
+plugins {
+    id "java-library"
+}
+
+group = 'fr.tokazio.konsistksp'
+version = "${libs.versions.me.version.get()}"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "fr.tokazio.archivald:konsist"
+    implementation "fr.tokazio.archivald:internal-processor"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(libs.versions.jvm.version.get().toInteger())
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -10,4 +10,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'konsistksp-standard-rules'
+rootProject.name = 'standard-rules'

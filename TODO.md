@@ -6,3 +6,6 @@
 * @ArchitectureRule(level) error (break the build) or warn
 * max number of errors in no fail fast mode
 * do not recompile src/rules file if not changed
+
+* ArchUnit implems
+* Java annotation processor implems

@@ -1,0 +1,26 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+}
+
+group = 'fr.tokazio.archivald'
+version = "${libs.versions.me.version.get()}"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "fr.tokazio.archivald:konsist"
+    implementation "fr.tokazio.archivald:internal-processor"
+
+    implementation "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
+}
+
+test {
+    useJUnitPlatform()
+}
