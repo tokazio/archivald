@@ -1,5 +1,5 @@
 plugins {
-    id "java-library"
+    alias(libs.plugins.kotlin.jvm)
 }
 
 group = 'fr.tokazio.konsistksp'
@@ -14,10 +14,8 @@ dependencies {
     implementation "fr.tokazio.archivald:internal-processor"
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(libs.versions.jvm.version.get().toInteger())
-    }
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
 }
 
 test {

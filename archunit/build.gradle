@@ -1,5 +1,5 @@
 plugins {
-    id "java-library"
+    alias(libs.plugins.kotlin.jvm)
     id 'maven-publish'
 }
 
@@ -14,10 +14,8 @@ dependencies {
     api "fr.tokazio.archivald:annotations"
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(libs.versions.jvm.version.get().toInteger())
-    }
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
 }
 
 publishing {

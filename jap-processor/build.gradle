@@ -1,5 +1,5 @@
 plugins {
-    id "java-library"
+    alias(libs.plugins.kotlin.jvm)
     id 'maven-publish'
 }
 
@@ -13,12 +13,13 @@ repositories {
 
 dependencies {
     implementation "fr.tokazio.archivald:internal-processor"
+
+    compileOnly 'com.google.auto.service:auto-service:1.0-rc2'
+
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(libs.versions.jvm.version.get().toInteger())
-    }
+kotlin {
+    jvmToolchain(libs.versions.jvm.version.get().toInteger())
 }
 
 test {
