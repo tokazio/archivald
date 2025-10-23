@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    api "fr.tokazio.archivald:annotations"
+    implementation "fr.tokazio.archivald:annotations"
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:${libs.versions.kotlin.version.get()}"
 }
 
