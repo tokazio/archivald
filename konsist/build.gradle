@@ -11,12 +11,18 @@ repositories {
 }
 
 dependencies {
-    api "fr.tokazio.archivald:annotations"
+    implementation "fr.tokazio.archivald:annotations"
     compileOnly "com.lemonappdev:konsist:${libs.versions.konsist.version.get()}"
 }
 
 kotlin {
     jvmToolchain(libs.versions.jvm.version.get().toInteger())
+}
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 publishing {

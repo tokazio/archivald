@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 class ArchivaldKspSymbolResolver(
     private val resolver: Resolver,
 ) : SymbolResolver {
-    override fun getSymbolsWithAnnotation(annotationKlass: KClass<*>) =
+    override fun getSymbolsWithAnnotation(annotationKlass: KClass<out Annotation>) =
         resolver.getSymbolsWithAnnotation(annotationKlass.java.name).map {
             ArchivaldKspAnnotated(it)
         }
