@@ -7,9 +7,7 @@ interface KonsistKspKoNameProvider : KoNameProvider {
 
     override fun hasNameEndingWith(suffix: String): Boolean = name.endsWith(suffix)
 
-    override fun hasNameMatching(regex: Regex): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun hasNameMatching(regex: Regex): Boolean = name.contains(regex)
 
     override fun hasNameStartingWith(prefix: String): Boolean = name.startsWith(prefix)
 }

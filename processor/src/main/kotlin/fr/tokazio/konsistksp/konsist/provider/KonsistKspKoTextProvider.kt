@@ -7,9 +7,7 @@ interface KonsistKspKoTextProvider : KoTextProvider {
 
     override fun hasTextEndingWith(suffix: String): Boolean = text.endsWith(suffix)
 
-    override fun hasTextMatching(regex: Regex): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun hasTextMatching(regex: Regex): Boolean = text.contains(regex)
 
     override fun hasTextStartingWith(prefix: String): Boolean = text.startsWith(prefix)
 }

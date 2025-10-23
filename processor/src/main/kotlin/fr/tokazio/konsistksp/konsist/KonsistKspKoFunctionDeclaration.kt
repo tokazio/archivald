@@ -40,8 +40,6 @@ class KonsistKspKoFunctionDeclaration(
 
     override val hasReturnValue: Boolean = returnType != null
 
-    override fun hasReturnType(predicate: ((KoTypeDeclaration) -> Boolean)?): Boolean = hasReturnValue
-
     override val numVariables: Int by lazy {
         variables.size
     }
@@ -160,10 +158,6 @@ class KonsistKspKoFunctionDeclaration(
     // TODO handle
     // ================================================================================================================
     // ================================================================================================================
-
-    override fun hasReturnTypeOf(kClass: KClass<*>): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override val isTopLevel: Boolean
         get() = TODO("Not yet implemented")
