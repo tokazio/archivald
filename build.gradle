@@ -6,7 +6,7 @@ tasks.register("clean") {
 tasks.register("build") {
     group = "build"
     dependsOn(
-            ['konsist', 'archunit', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
+            ['annotations', 'konsist', 'archunit', 'archunit-processor', 'internal-processor', 'konsist-processor', 'ksp-processor', 'jap-processor', 'standard-rules'].collect {
                 gradle.includedBuild(it).task(':build')
             }
     )
